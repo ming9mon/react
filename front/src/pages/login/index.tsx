@@ -1,9 +1,7 @@
-import KakaoLogin from "react-kakao-login";
-import {useEffect} from "react";
-import NaverLogin from "./NaverLogin.tsx";
-
-const KAKAO_CLIENT_ID = "a6d88f2580d7a80f1bfc1be7173a2d1f";
-const NAVER_CLIENT_ID = "WGwZWYWbzgSbjF53IuF8";
+import NaverLoginType1 from "./naverLogin/NaverLoginType1.tsx";
+import NaverLoginType2 from "./naverLogin/NaverLoginType2.tsx";
+import KakaoLoginType2 from "./kakaoLogin/KakaoLoginType2.tsx";
+import KakaoLoginType1 from "./kakaoLogin/KakaoLoginType1.tsx";
 
 const Login: React.FC = () => {
 
@@ -12,11 +10,17 @@ const Login: React.FC = () => {
         <div>
             <h1>카카오 & 네이버 로그인 예제</h1>
 
+            <h2>redirect 방식</h2>
+            <h3>Type1 : Frontend에서 사용자 정보 받아오기</h3>
+            <NaverLoginType1 />
+            <KakaoLoginType1 />
             {/* 카카오 로그인 버튼 */}
             {/*<button onClick={handleKakaoLogin}>카카오 로그인</button>*/}
 
             {/* 네이버 로그인 버튼 */}
-            <NaverLogin />
+            <h3>Type2 : Backend에서 사용자 정보 받아오기</h3>
+            <NaverLoginType2 />
+            <KakaoLoginType2 />
         </div>
     )
 };
