@@ -4,20 +4,15 @@ import com.react.backend.configuration.util.JwtUtil;
 import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
 import com.react.backend.react.auth.service.LoginService;
-import org.jasypt.util.text.AES256TextEncryptor;
+import com.react.backend.react.common.dto.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-@RestController
+@RestController("/auth")
 public class AuthController {
 
     @Autowired
@@ -33,8 +28,10 @@ public class AuthController {
     @PostMapping("/login")
     public Map<String, String> login() {
 
-        String accessToken = jwtUtil.generateAccessToken("test");
-        String refreshToken = jwtUtil.generateRefreshToken("test");
+        UserInfoDto userInfoDto = new UserInfoDto();
+
+        String accessToken = jwtUtil.generateAccessToken(userInfoDto);
+        String refreshToken = jwtUtil.generateRefreshToken(userInfoDto);
 
         System.out.println(accessToken);
         System.out.println(refreshToken);

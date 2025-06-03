@@ -6,17 +6,15 @@ import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
 import com.react.backend.react.auth.service.LoginService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class LoginServiceImpl implements LoginService {
