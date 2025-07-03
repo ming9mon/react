@@ -11,6 +11,24 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(value = { RestException.class })
+    public ResponseEntity<Object> handleRestException(RestException ex, WebRequest request) {
+        return new ResponseEntity<>(new ErrorResponse("EM500", ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // JWT 유효성 검사 실패 시 예외 처리
+    @ExceptionHandler(value = { JwtValidationException.class })
+    public ResponseEntity<Object> handleJwtValidationException(JwtValidationException ex, WebRequest request) {
+        // 클라이언트 로직 오류 -> 401 처리
+        return new ResponseEntity<>(new ErrorResponse("ET401", ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    // 인증 실패 예외 처리
+//    @ExceptionHandler(value = { AuthenticationException.class })
+//    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+//        return new ResponseEntity<>(new ErrorResponse("500", "Authentication Failed"), HttpStatus.FORBIDDEN);
+//    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         ex.printStackTrace();
