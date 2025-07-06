@@ -1,7 +1,7 @@
-import LoginForm from "@/features/login/components/loginForm";
+import BoardForm from "@/features/board/components/boardForm";
 
 export default function boardPage() {
     return (
-        <LoginForm />
+      <BoardForm />
     )
 }

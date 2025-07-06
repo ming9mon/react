@@ -1,13 +1,15 @@
-import "./globals.css";
+import "@/style/globals.css";
 
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
+  children,
+}: Readonly<{
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="ko">
-        <body>{children}</body>
-        </html>
-    );
+  return (
+    <html lang="en">
+      <body>
+        {children}
+      </body>
+    </html>
+  );
 }

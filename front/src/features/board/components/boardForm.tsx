@@ -1,4 +1,4 @@
-export default function boardForm() {
+export default function BoardForm() {
     return (
         <div>
             게시판

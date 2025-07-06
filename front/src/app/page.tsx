@@ -1,18 +1,12 @@
-import LoginForm from "@/features/login/components/loginForm";
-import DashboardForm from "@/features/dashboard/components/dashboardForm";
+import MainForm from "@/features/main/components/mainForm";
+import {redirect} from "next/navigation";
 
 export default async function HomePage() {
   const session = false
 
   if (!session) {
-    // 로그인 안 된 상태
-    return (
-        <main className="flex items-center justify-center h-screen">
-          <LoginForm />
-        </main>
-    )
+    redirect("/login")
   }
 
-  // 로그인 된 상태
-  return <DashboardForm />
+  return <MainForm />
 }
