@@ -2,15 +2,15 @@
 
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {useForm} from "react-hook-form";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "아이디를 입력해주세요"),
-  password: z.string().min(1, "비밀번호를 입력해주세요"),
+  userId: z.string().min(1, "아이디를 입력해주세요"),
+  passWd: z.string().min(1, "비밀번호를 입력해주세요"),
 })
 
 type LoginFormData = z.infer<typeof loginSchema>
@@ -19,7 +19,7 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
@@ -38,16 +38,20 @@ export default function LoginForm() {
 							<CardTitle>로그인</CardTitle>
 						</CardHeader>
 						<CardContent>
-							<form>
+							<form onSubmit={handleSubmit(onSubmit)}>
 								<div className="flex flex-col gap-6">
 									<div className="grid gap-3">
 										<Label htmlFor="email">아이디</Label>
 										<Input
-											id="userId"
 											type="text"
 											placeholder="ID"
-											required
+											{...register('userId')}
 										/>
+										{errors.userId && (
+											<p className="text-sm text-red-500">
+												{errors.userId.message}
+											</p>
+										)}
 									</div>
 									<div className="grid gap-3">
 										<div className="flex items-center">
@@ -63,8 +67,13 @@ export default function LoginForm() {
 											id="password"
 											type="password"
 											placeholder="password"
-											required
+											{...register('passWd')}
 										/>
+										{errors.passWd && (
+											<p className="text-sm text-red-500">
+												{errors.passWd.message}
+											</p>
+										)}
 									</div>
 									<div className="flex flex-col gap-3">
 										<Button type="submit" className="w-full">
