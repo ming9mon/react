@@ -3,6 +3,7 @@ package com.react.backend.react.auth.controller;
 import com.react.backend.configuration.util.JwtUtil;
 import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
+import com.react.backend.react.auth.dto.SignUpReqDto;
 import com.react.backend.react.auth.service.LoginService;
 import com.react.backend.react.common.dto.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,13 @@ public class AuthController {
         return loginService.naverLogin(naverLoginReqDto);
     }
 
-    @PostMapping("/logout")
-    public String logout() {
-        return null;
+    @PostMapping("/signUp")
+    public String signUp(@RequestBody SignUpReqDto signUpReqDto) throws Exception {
+        return loginService.signUp(signUpReqDto);
     }
 
-    @PostMapping("/signUp")
-    public String signUp() {
+    @PostMapping("/logout")
+    public String logout() {
         return null;
     }
 }

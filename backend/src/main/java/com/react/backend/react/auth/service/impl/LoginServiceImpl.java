@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
+import com.react.backend.react.auth.dto.SignUpReqDto;
 import com.react.backend.react.auth.service.LoginService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -29,6 +30,13 @@ public class LoginServiceImpl implements LoginService {
     private String NAVER_CLIENT_SECRET;
 
 
+    /**
+     * 카카오 로그인
+     * @param kakaoLoginReqDto
+     * @return
+     * @throws Exception
+     */
+    @Override
     public Map<String, Object> kakaoLogin(KakaoLoginReqDto kakaoLoginReqDto) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         String accessToken = kakaoLoginReqDto.getAccessToken();
@@ -65,7 +73,13 @@ public class LoginServiceImpl implements LoginService {
         return userInfo;
     }
 
-
+    /**
+     * 네이버 로그인
+     * @param naverLoginReqDto
+     * @return
+     * @throws Exception
+     */
+    @Override
     public String naverLogin(NaverLoginReqDto naverLoginReqDto) throws Exception {
         String code = naverLoginReqDto.getCode();
 
@@ -98,5 +112,16 @@ public class LoginServiceImpl implements LoginService {
         System.out.println(userResponse.getBody());
         //return ResponseEntity.ok(userResponse.getBody());
         return code;
+    }
+
+    /**
+     *
+     * @param signUpReqDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String signUp(SignUpReqDto signUpReqDto) throws Exception {
+        return null;
     }
 }
