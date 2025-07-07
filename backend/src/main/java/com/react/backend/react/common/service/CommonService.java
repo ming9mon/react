@@ -1,0 +1,16 @@
+package com.react.backend.react.common.service;
+
+import com.react.backend.react.common.dto.FileSaveResultDto;
+import com.react.backend.react.common.enums.FileType;
+import org.springframework.web.multipart.MultipartFile;
+
+public interface CommonService {
+
+  /**
+   * 파일 저장
+   * @param file MultipartFile
+   * @param type 업로드 타입
+   * @return FileSaveResultDto
+   */
+  FileSaveResultDto fileSave(MultipartFile file, FileType type) throws Exception;
+}
