@@ -9,9 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class SignUpReqDto extends BaseDto {
   String userId;
-  String passwd;
+  String passWd;
   String userNm;
   String nickname;
+  String sex;
   String email;
   MultipartFile profileImg;
 }

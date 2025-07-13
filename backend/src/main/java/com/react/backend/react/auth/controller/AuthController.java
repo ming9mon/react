@@ -7,13 +7,12 @@ import com.react.backend.react.auth.dto.SignUpReqDto;
 import com.react.backend.react.auth.service.LoginService;
 import com.react.backend.react.common.dto.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController("/auth")
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -40,7 +39,7 @@ public class AuthController {
         return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
     }
 
-    @PostMapping("/login/kakao")
+    @PostMapping("/kakao")
     public Map<String, Object> kakaoLogin(@RequestBody KakaoLoginReqDto kakaoLoginReqDto) throws Exception {
         return loginService.kakaoLogin(kakaoLoginReqDto);
     }
@@ -51,13 +50,13 @@ public class AuthController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/login/naver")
+    @PostMapping("/naver")
     public String naverLogin(@RequestBody NaverLoginReqDto naverLoginReqDto) throws Exception {
         return loginService.naverLogin(naverLoginReqDto);
     }
 
-    @PostMapping("/signUp")
-    public String signUp(@RequestBody SignUpReqDto signUpReqDto) throws Exception {
+    @PostMapping("/signup")
+    public Object signUp(@ModelAttribute SignUpReqDto signUpReqDto) throws Exception {
         return loginService.signUp(signUpReqDto);
     }
 
