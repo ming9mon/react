@@ -8,15 +8,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import CommonLabel from "@/components/common/common-label";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {signup} from "@/features/auth/api/authApi";
+import {SignupPayload} from "@/features/auth/types";
 
 const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
 const signupSchema = z.object({
-	userId: z.string().min(1, "아이디를 입력해주세요"),
-	passWd: z.string().min(1, "비밀번호를 입력해주세요"),
-	passWdCheck: z.string().min(1, "비밀번호 확인을 입력해주세요"),
-	userNm: z.string().min(1, "이름을 입력해주세요"),
-	nickname: z.string().min(1, "닉네임을 입력해주세요"),
+	userId: z.string()
+		.min(4, "아이디는 최소 4자리 이상이어야 합니다.")
+		.regex(/^[a-zA-Z0-9]+$/, "아이디는 영문 대소문자와 숫자만 입력할 수 있습니다."),
+	passWd: z.string()
+		.min(8, "비밀번호는 최소 8자리 이상이어야 합니다.")
+		.regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).*$/,
+			"비밀번호는 대문자, 숫자, 특수문자를 포함해야 합니다."),
+	passWdCheck: z.string().min(8, "비밀번호 확인을 입력해주세요."),
+	userNm: z.string()
+		.min(2, "이름은 최소 2자리 이상이어야 합니다.")
+		.regex(/^[a-zA-Z가-힣]+$/, "이름은 한글 또는 영문만 입력할 수 있습니다."),
+	nickname: z.string()
+		.min(1, "닉네임을 입력해주세요")
+		.max(12, "닉네임은 최대 12자리 이하이어야 합니다."),
 	sex: z.enum(["M", "F"], { errorMap: () => ({ message: "성별을 선택해주세요" }) }),
 	email: z.string().email("이메일 형식이 아닙니다"),
 	profileImg: z
@@ -47,22 +58,29 @@ export default function SignupForm(){
 		resolver: zodResolver(signupSchema),
 	});
 
-	const onSubmit = (data: SignupFormData) => {
+	function toFormData(data: SignupPayload): FormData {
+		const fd = new FormData();                   // ← FormData 타입
+		fd.append('userId',   data.userId);
+		fd.append('passWd',   data.passWd);
+		fd.append('userNm',   data.userNm);
+		fd.append('nickname', data.nickname);
+		fd.append('email',    data.email);
+		fd.append('sex',      data.sex);
+		if (data.profileImg) {
+			fd.append('profileImg', data.profileImg[0]);
+		}
+		return fd;
+	}
+
+	const onSubmit = async (data: SignupFormData) => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { passWdCheck, ...payload } = data;
 
-		const formData = new FormData();
-		formData.append("userId", payload.userId);
-		formData.append("passWd", payload.passWd);
-		formData.append("userNm", payload.userNm);
-		formData.append("nickname", payload.nickname);
-		formData.append("email", payload.email);
-		formData.append("sex", payload.sex);
-		if (payload.profileImg?.length) {
-			formData.append("profileImg", payload.profileImg[0]);
-		}
+		console.log(payload)
 
-		console.log(formData);
+		const formData = toFormData(payload)
+
+		const result = await signup(formData)
 	};
 
 	return (
@@ -81,7 +99,11 @@ export default function SignupForm(){
 								{/* 아이디 */}
 								<div className="grid gap-3">
 									<CommonLabel htmlFor="userId" required={true}>아이디</CommonLabel>
-									<Input id="userId" {...register("userId")} />
+									<Input
+										id="userId"
+										{...register("userId")}
+										maxLength={12}
+									/>
 									{errors.userId && (
 										<p className="text-sm text-red-500">
 											{errors.userId.message}
@@ -96,6 +118,7 @@ export default function SignupForm(){
 										id="passWd"
 										type="password"
 										{...register("passWd")}
+										maxLength={20}
 									/>
 									{errors.passWd && (
 										<p className="text-sm text-red-500">
@@ -111,6 +134,7 @@ export default function SignupForm(){
 										id="passWdCheck"
 										type="password"
 										{...register("passWdCheck")}
+										maxLength={20}
 									/>
 									{errors.passWdCheck && (
 										<p className="text-sm text-red-500">
@@ -122,7 +146,11 @@ export default function SignupForm(){
 								{/* 이름 */}
 								<div className="grid gap-3">
 									<CommonLabel htmlFor="userNm" required={true}>이름</CommonLabel>
-									<Input id="userNm" {...register("userNm")} />
+									<Input
+										id="userNm"
+										{...register("userNm")}
+										maxLength={12}
+									/>
 									{errors.userNm && (
 										<p className="text-sm text-red-500">
 											{errors.userNm.message}
@@ -133,7 +161,11 @@ export default function SignupForm(){
 								{/* 닉네임 */}
 								<div className="grid gap-3">
 									<CommonLabel htmlFor="nickname" required={true}>닉네임</CommonLabel>
-									<Input id="nickname" {...register("nickname")} />
+									<Input
+										id="nickname"
+										{...register("nickname")}
+										maxLength={12}
+									/>
 									{errors.nickname && (
 										<p className="text-sm text-red-500">
 											{errors.nickname.message}
@@ -179,7 +211,12 @@ export default function SignupForm(){
 								{/* 이메일 */}
 								<div className="grid gap-3">
 									<CommonLabel htmlFor="email" required={true}>이메일</CommonLabel>
-									<Input id="email" type="email" {...register("email")} />
+									<Input
+										id="email"
+										type="email"
+										{...register("email")}
+										maxLength={40}
+									/>
 									{errors.email && (
 										<p className="text-sm text-red-500">
 											{errors.email.message}

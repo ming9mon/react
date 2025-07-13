@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const { NEXT_PUBLIC_API_PREFIX, NEXT_PUBLIC_BACKEND_URL } = process.env;
+
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	eslint: {
@@ -11,14 +13,13 @@ const nextConfig: NextConfig = {
 		ignoreBuildErrors: false,
 	},
 	webpack(config, { isServer }) {
-		// 필요 시 커스텀 webpack 구성
 		return config
 	},
 	async rewrites() {
 		return [
 			{
-				source: '/api/:path*',       // 프론트 요청 주소
-				destination: 'http://localhost:8080/:path*', // 백엔드 주소
+				source: `${NEXT_PUBLIC_API_PREFIX}/:path*`,       // 프론트 요청 주소
+				destination: `${NEXT_PUBLIC_BACKEND_URL}/:path*`, // 백엔드 주소
 			},
 		]
 	},

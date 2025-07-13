@@ -63,13 +63,13 @@ const handleError = async (error: AxiosError) => {
 }
 
 export const api = axios.create({
-	baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+	baseURL: process.env.NEXT_PUBLIC_API_PREFIX,
 	timeout: 10_000, // 10초
 })
 
 api.interceptors.request.use((config) => {
-	const { accessToken } = useUserStore()
-	if (accessToken) config.headers!['Authorization'] = `Bearer ${accessToken}`
+	// const { accessToken } = useUserStore.getState();
+	// if (accessToken) config.headers!['Authorization'] = `Bearer ${accessToken}`
 	return config
 })
 
@@ -88,7 +88,7 @@ function request<T>(promise: Promise<AxiosResponse<T>>): Promise<T> {
 	return promise.then(res => res.data);
 }
 
-export const get = <T>(url: string, config?: object) => request(api.get<T>(url, config));
-export const post = <B, R>(url: string, body: B, config?: object) => request<R>(api.post<R>(url, body, config));
-export const del = <T>(url: string, config?: object) => request<T>(api.delete<T>(url, config));
-export const download = (url: string, config?: object) => api.get<Blob>(url, { ...config, responseType: 'blob' });
+export const get = <T>(url: string, config?: AxiosRequestConfig) => request(api.get<T>(url, config));
+export const post = <B, R>(url: string, body: B, config?: AxiosRequestConfig) => request<R>(api.post<R>(url, body, config));
+export const del = <T>(url: string, config?: AxiosRequestConfig) => request<T>(api.delete<T>(url, config));
+export const download = (url: string, config?: AxiosRequestConfig) => api.get<Blob>(url, { ...config, responseType: 'blob' });

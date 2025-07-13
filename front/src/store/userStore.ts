@@ -1,5 +1,5 @@
-import {create} from "zustand/react";
-import {createJSONStorage, persist} from "zustand/middleware/persist";
+import {create} from "zustand";
+import {createJSONStorage, persist} from "zustand/middleware";
 
 interface UserInfo {
 	userId: string;      		// 사용자 아이디
