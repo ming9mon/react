@@ -134,7 +134,7 @@ public class LoginServiceImpl implements LoginService {
      * @throws Exception
      */
     @Override
-    public ResponseDto signUp(SignUpReqDto signUpReqDto) throws Exception {
+    public void signUp(SignUpReqDto signUpReqDto) throws Exception {
         if (userRepository.existsByUserId(signUpReqDto.getUserId())) {
             throw new IllegalArgumentException("이미 존재하는 ID입니다.");
         }
@@ -166,9 +166,5 @@ public class LoginServiceImpl implements LoginService {
             .build();
 
         userRepository.save(user);
-
-        return ResponseDto.builder()
-            .message("회원가입 성공하였습니다.")
-            .build();
     }
 }

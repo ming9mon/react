@@ -30,5 +30,5 @@ public interface LoginService {
      * @param signUpReqDto
      * @throws Exception
      */
-    ResponseDto signUp(SignUpReqDto signUpReqDto) throws Exception;
+    void signUp(SignUpReqDto signUpReqDto) throws Exception;
 }

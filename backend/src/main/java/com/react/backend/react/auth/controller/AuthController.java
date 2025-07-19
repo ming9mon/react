@@ -64,8 +64,8 @@ public class AuthController {
      * @throws Exception
      */
     @PostMapping("/signup")
-    public ResponseDto signUp(@Validated @ModelAttribute SignUpReqDto signUpReqDto) throws Exception {
-        return loginService.signUp(signUpReqDto);
+    public void signUp(@Validated @ModelAttribute SignUpReqDto signUpReqDto) throws Exception {
+        loginService.signUp(signUpReqDto);
     }
 
     @PostMapping("/logout")
