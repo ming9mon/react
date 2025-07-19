@@ -1,6 +1,7 @@
 package com.react.backend.configuration.config;
 
 import com.react.backend.configuration.exception.GlobalExceptionHandler;
+import com.react.backend.react.common.dto.ResponseDto;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -35,24 +36,37 @@ public class ResponseConfig implements ResponseBodyAdvice<Object> {
             return body;
         }
 
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("code", "200");
-        responseBody.put("message", "");
+        ResponseDto responseDto = ResponseDto.builder()
+            .code("200")
+            .build();
 
         if (body instanceof Map<?, ?>) {
             String code = (String) ((Map<?, ?>) body).get("code");
             String message = (String) ((Map<?, ?>) body).get("message");
 
-            if (code != null && !"".equals(code)) {
-                responseBody.put("code", code);
-                responseBody.put("message", message);
-
-                ((Map<?, ?>) body).remove("code");
-                ((Map<?, ?>) body).remove("message");
+            if (code != null && !code.isEmpty()) {
+                responseDto.setCode(code);
             }
+
+            if (message != null && !message.isEmpty()) {
+                responseDto.setMessage(message);
+            }
+        } else if (body instanceof ResponseDto dto) {
+            String code = dto.getCode();
+            String message = dto.getMessage();
+
+            if (code != null && !code.isEmpty()) {
+                responseDto.setCode(code);
+            }
+            if (message != null && !message.isEmpty()) {
+                responseDto.setMessage(message);
+            }
+
+            body = dto.getBody();
         }
 
-        responseBody.put("body", body);
-        return responseBody;
+        responseDto.setBody(body);
+
+        return responseDto;
     }
 }

@@ -3,6 +3,7 @@ package com.react.backend.react.auth.service;
 import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
 import com.react.backend.react.auth.dto.SignUpReqDto;
+import com.react.backend.react.common.dto.ResponseDto;
 
 import java.util.Map;
 
@@ -27,8 +28,7 @@ public interface LoginService {
     /**
      * 회원 가입
      * @param signUpReqDto
-     * @return
      * @throws Exception
      */
-    String signUp(SignUpReqDto signUpReqDto) throws Exception;
+    ResponseDto signUp(SignUpReqDto signUpReqDto) throws Exception;
 }

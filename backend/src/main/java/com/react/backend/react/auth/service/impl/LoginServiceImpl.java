@@ -2,23 +2,36 @@ package com.react.backend.react.auth.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.react.backend.react.auth.domain.User;
 import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
 import com.react.backend.react.auth.dto.SignUpReqDto;
+import com.react.backend.react.auth.repository.UserRepository;
 import com.react.backend.react.auth.service.LoginService;
+import com.react.backend.react.common.dto.FileSaveResultDto;
+import com.react.backend.react.common.dto.ResponseDto;
+import com.react.backend.react.common.enums.FileType;
+import com.react.backend.react.common.service.CommonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
+
+    private final CommonService commonService;
+    private final UserRepository userRepository;
 
     @Value("${kakao.login.info.url}")
     private String KAKAO_USER_INFO_URL;
@@ -121,7 +134,41 @@ public class LoginServiceImpl implements LoginService {
      * @throws Exception
      */
     @Override
-    public String signUp(SignUpReqDto signUpReqDto) throws Exception {
-        return null;
+    public ResponseDto signUp(SignUpReqDto signUpReqDto) throws Exception {
+        if (userRepository.existsByUserId(signUpReqDto.getUserId())) {
+            throw new IllegalArgumentException("이미 존재하는 ID입니다.");
+        }
+        if (userRepository.existsByEmail(signUpReqDto.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 EMAIL입니다.");
+        }
+
+        // 파일이 있으면 저장
+        String profileImgUrl = null;
+        if (signUpReqDto.getProfileImg() != null) {
+            FileSaveResultDto fileSaveResult = commonService.fileSave(signUpReqDto.getProfileImg(), FileType.PROFILE_IMAGE);
+
+            profileImgUrl = fileSaveResult.getSavedFilePath() + File.separator + fileSaveResult.getSavedFileName();
+        }
+
+        // 암호화
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodePasswd = passwordEncoder.encode(signUpReqDto.getPassWd());
+
+        User user = User.builder()
+            .userId(signUpReqDto.getUserId())
+            .passWd(encodePasswd)
+            .userNm(signUpReqDto.getUserNm())
+            .nickname(signUpReqDto.getNickname())
+            .sex(User.Sex.valueOf(signUpReqDto.getSex()))
+            .email(signUpReqDto.getEmail())
+            .profileImgUrl(profileImgUrl)
+            .provider(User.Provider.local)
+            .build();
+
+        userRepository.save(user);
+
+        return ResponseDto.builder()
+            .message("회원가입 성공하였습니다.")
+            .build();
     }
 }

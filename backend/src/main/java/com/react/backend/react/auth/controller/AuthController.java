@@ -5,8 +5,10 @@ import com.react.backend.react.auth.dto.KakaoLoginReqDto;
 import com.react.backend.react.auth.dto.NaverLoginReqDto;
 import com.react.backend.react.auth.dto.SignUpReqDto;
 import com.react.backend.react.auth.service.LoginService;
+import com.react.backend.react.common.dto.ResponseDto;
 import com.react.backend.react.common.dto.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -55,8 +57,14 @@ public class AuthController {
         return loginService.naverLogin(naverLoginReqDto);
     }
 
+    /**
+     * 회원가입
+     * @param signUpReqDto
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/signup")
-    public Object signUp(@ModelAttribute SignUpReqDto signUpReqDto) throws Exception {
+    public ResponseDto signUp(@Validated @ModelAttribute SignUpReqDto signUpReqDto) throws Exception {
         return loginService.signUp(signUpReqDto);
     }
 

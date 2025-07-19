@@ -46,7 +46,7 @@ public class CommonServiceImpl implements CommonService {
 
     // 프로필 이미지 업로드 경로
     if (type == FileType.PROFILE_IMAGE) {
-      Paths.get(uploadProfilePath, savedFileName);
+      savePath = Paths.get(uploadProfilePath, savedFileName);
     }
 
     // 디렉토리가 없으면 생성
