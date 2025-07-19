@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,9 +25,15 @@ public class GlobalExceptionHandler {
     // JWT 유효성 검사 실패 시 예외 처리
     @ExceptionHandler(value = { JwtValidationException.class })
     public ResponseEntity<ErrorResponse> handleJwtValidationException(JwtValidationException ex, WebRequest request) {
-        // 클라이언트 로직 오류 -> 401 처리
-        return new ResponseEntity<>(new ErrorResponse("ET401", ex.getMessage()), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorResponse("401", ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxSize(MaxUploadSizeExceededException ex) {
+        return new ResponseEntity<>(new ErrorResponse("EM413", "파일 크기가 너무 큽니다. 최대 10MB까지 업로드 가능합니다."), HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+
 
     // 인증 실패 예외 처리
 //    @ExceptionHandler(value = { AuthenticationException.class })
