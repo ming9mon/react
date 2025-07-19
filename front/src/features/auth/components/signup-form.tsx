@@ -10,6 +10,9 @@ import CommonLabel from "@/components/common/common-label";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {signup} from "@/features/auth/api/authApi";
 import {SignupPayload} from "@/features/auth/types";
+import {ArrowLeft} from "lucide-react";
+import {useRouter} from "next/navigation";
+import {HOME} from "@/shared/constants";
 
 const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
@@ -49,6 +52,7 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 export default function SignupForm(){
+	const router = useRouter();
 	const {
 		control,
 		register,
@@ -66,7 +70,7 @@ export default function SignupForm(){
 		fd.append('nickname', data.nickname);
 		fd.append('email',    data.email);
 		fd.append('sex',      data.sex);
-		if (data.profileImg) {
+		if (data.profileImg && data.profileImg.length > 0) {
 			fd.append('profileImg', data.profileImg[0]);
 		}
 		return fd;
@@ -76,19 +80,30 @@ export default function SignupForm(){
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { passWdCheck, ...payload } = data;
 
-		console.log(payload)
-
 		const formData = toFormData(payload)
 
-		const result = await signup(formData)
+		const { code } = await signup(formData);
+
+		if (code === "200") {
+			alert("회원가입 되었습니다.")
+			router.push(HOME)
+		}
 	};
 
 	return (
 		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
 			<div className="w-full max-w-sm">
 				<Card>
-					<CardHeader>
+					<CardHeader className="flex items-center justify-between">
 						<CardTitle>회원가입</CardTitle>
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={() => router.back()}
+							aria-label="뒤로가기"
+						>
+							<ArrowLeft className="h-4 w-4" />
+						</Button>
 					</CardHeader>
 					<CardContent>
 						<form
