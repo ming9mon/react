@@ -1,4 +1,5 @@
 import "@/style/globals.css";
+import Header from "@/components/common/header";
 
 export default function RootLayout({
   children,
@@ -7,6 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Header />
       <body>
         {children}
       </body>
