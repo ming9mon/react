@@ -1,20 +1,19 @@
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios'
-import {useUserStore} from "@/store/userStore";
 
 
-// interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-// 	_retry?: boolean;
-// }
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+	_retry?: boolean;
+}
 
 const handleError = async (error: AxiosError) => {
-	// const AXIOS_ERROR = "AxiosError";
-	// const UNAUTHORIZED = "Unauthorized";
-	// const response = error.response as AxiosResponse;
-	// const unauthorized = response && response.status === 401;
-	// const duplicateLogin = response && response.status === 409;
-	// const original = error.config as CustomAxiosRequestConfig;
-	//
-	// // 토큰 만료
+	const AXIOS_ERROR = "AxiosError";
+	const UNAUTHORIZED = "Unauthorized";
+	const response = error.response as AxiosResponse;
+	const unauthorized = response && response.status === 401;
+	const duplicateLogin = response && response.status === 409;
+	const original = error.config as CustomAxiosRequestConfig;
+
+	// 토큰 만료
 	// if (unauthorized) {
 	// 	// 토큰 재발급
 	// 	if (!original._retry) {
@@ -38,26 +37,28 @@ const handleError = async (error: AxiosError) => {
 	// 	}
 	// 	return Promise.resolve({});
 	// }
-	//
-	// // 중복 로그인
+
+	// 중복 로그인
 	// if (duplicateLogin) {
 	// 	const { data } = response;
 	// 	showAlert({ title: data.message, callback: useAuth().logout });
 	// 	return Promise.resolve({});
 	// }
-	//
+
 	// const { data } = response;
 	// if (data) {
 	// 	showAlert({ title: data.message });
 	// 	return Promise.resolve({});
 	// }
 	//
-	// const isAxiosError = error.name === AXIOS_ERROR;
-	// if (!response || isAxiosError) {
-	// 	const { message, code } = error;
-	// 	const text = `<strong>Message</strong>: ${message} <br/> <strong>Code</strong>: ${code}`;
-	// 	showAlert({ title: UNAUTHORIZED, text });
-	// }
+	const isAxiosError = error.name === AXIOS_ERROR;
+	if (!response || isAxiosError) {
+		const { code, message } = response.data;
+		const text = `<strong>Message</strong>: ${message} <br/> <strong>Code</strong>: ${code}`;
+		// showAlert({ title: UNAUTHORIZED, text });
+		console.log(response)
+		alert(message)
+	}
 
 	return Promise.resolve({});
 }
