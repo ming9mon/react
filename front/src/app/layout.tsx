@@ -8,9 +8,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col h-screen">
         <Header />
-        {children}
+        <main className="flex-1 flex items-center justify-center p-6 md:p-10">
+          {children}
+        </main>
       </body>
     </html>
   );
