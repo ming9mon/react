@@ -1,4 +1,5 @@
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios'
+import {mAlert} from "@/shared/helpers/commonDialog";
 
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
@@ -57,7 +58,12 @@ const handleError = async (error: AxiosError) => {
 		const text = `<strong>Message</strong>: ${message} <br/> <strong>Code</strong>: ${code}`;
 		// showAlert({ title: UNAUTHORIZED, text });
 		console.log(response)
-		alert(message)
+		console.log(message)
+		if (message) {
+			mAlert(message)
+		} else {
+			mAlert("에러가 발생하였습니다.")
+		}
 	}
 
 	return Promise.resolve({});

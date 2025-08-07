@@ -6,7 +6,7 @@ import {Controller, useForm} from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import CommonLabel from "@/components/common/common-label";
+import CommonLabel from "@/components/common/CommonLabel";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {signup} from "@/features/auth/api/authApi";
 import {SignupPayload} from "@/features/auth/types";

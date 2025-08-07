@@ -7,12 +7,13 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {useForm} from "react-hook-form";
 import Link from "next/link";
-import CommonLabel from "@/components/common/common-label";
+import CommonLabel from "@/components/common/CommonLabel";
 
 import googleLogo from "@/assets/images/logo/google.png";
 import naverLogo from "@/assets/images/logo/naver.png";
 import kakaoLogo from "@/assets/images/logo/kakao.png";
 import Image from "next/image";
+import {mAlert} from "@/shared/helpers/commonDialog";
 
 const loginSchema = z.object({
   userId: z.string().min(1, "아이디를 입력해주세요"),
