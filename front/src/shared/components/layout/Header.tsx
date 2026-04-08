@@ -4,8 +4,14 @@ import Image from 'next/image'
 import logo from '@/assets/images/logo/logo-b.png'
 import Link from "next/link";
 import SideMenu from "@/components/layout/SideMenu";
+import {usePathname} from "next/navigation";
+
+const AUTH_PATHS = ["/login", "/signup"];
 
 export default function Header() {
+	const pathname = usePathname();
+	const isAuthPage = AUTH_PATHS.includes(pathname);
+
 	const goHome = () => {
 		location.href="/"
 	}
@@ -14,7 +20,7 @@ export default function Header() {
 		<header className="flex items-center justify-between p-4">
 			<div className="flex items-center gap-2">
 				{/* 사이드바 토글 버튼 */}
-				<SideMenu />
+				{!isAuthPage && <SideMenu />}
 
 				{/* 로고 */}
 				<div
