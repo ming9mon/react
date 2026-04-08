@@ -1,4 +1,4 @@
-import {SIGNUP_API} from "@/features/auth/constants";
+import {SIGNUP_API} from "../model/constants";
 import {post} from "@/shared/api/api";
 import {ApiResponse} from "@/shared/types/apiResponse";
 
