@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image'
-import logo from '@/assets/images/logo/logo-b.png'
+import logo from '@/shared/assets/images/logo/logo-b.png'
 import Link from "next/link";
 import SideMenu from "@/components/layout/SideMenu";
 import {usePathname} from "next/navigation";

@@ -9,9 +9,9 @@ import {useForm} from "react-hook-form";
 import Link from "next/link";
 import CommonLabel from "@/components/common/CommonLabel";
 
-import googleLogo from "@/assets/images/logo/google.png";
-import naverLogo from "@/assets/images/logo/naver.png";
-import kakaoLogo from "@/assets/images/logo/kakao.png";
+import googleLogo from "@/shared/assets/images/logo/google.png";
+import naverLogo from "@/shared/assets/images/logo/naver.png";
+import kakaoLogo from "@/shared/assets/images/logo/kakao.png";
 import Image from "next/image";
 import {mAlert} from "@/shared/helpers/commonDialog";
 

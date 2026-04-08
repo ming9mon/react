@@ -1,4 +1,4 @@
-import MainForm from "@/features/main/components/mainForm";
+import MainForm from "@/features/dashboard/components/MainForm";
 import {redirect} from "next/navigation";
 
 export default async function HomePage() {

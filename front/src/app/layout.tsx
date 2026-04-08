@@ -1,4 +1,4 @@
-import "@/style/globals.css";
+import "@/shared/styles/globals.css";
 import Header from "@/components/layout/Header";
 import {CommonDialogProvider} from "@/components/common/CommonDialog";
 
