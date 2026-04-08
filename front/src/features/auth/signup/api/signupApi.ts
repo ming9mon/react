@@ -1,5 +1,5 @@
 import {SIGNUP_API} from "../model/constants";
-import {post} from "@/shared/api/api";
+import {post} from "@/shared/api/apiClient";
 import {ApiResponse} from "@/shared/types/apiResponse";
 
 // 회원가입
