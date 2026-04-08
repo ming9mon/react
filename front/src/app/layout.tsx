@@ -1,5 +1,5 @@
 import "@/style/globals.css";
-import Header from "@/components/common/Header";
+import Header from "@/components/layout/Header";
 import {CommonDialogProvider} from "@/components/common/CommonDialog";
 
 export default function RootLayout({

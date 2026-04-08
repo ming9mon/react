@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import logo from '@/assets/images/logo/logo-b.png'
 import Link from "next/link";
-import SideMenu from "@/components/common/SideMenu";
+import SideMenu from "@/components/layout/SideMenu";
 
 export default function Header() {
 	const goHome = () => {
