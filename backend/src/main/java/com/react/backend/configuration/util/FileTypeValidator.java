@@ -34,10 +34,6 @@ public class FileTypeValidator {
     String actualMimeType = tika.detect(file.getInputStream());
     String expectedMimeType = typeOpt.get().getMimeType();
 
-    if (!expectedMimeType.equalsIgnoreCase(actualMimeType)) {
-      return false;
-    }
-
-    return true;
+    return expectedMimeType.equalsIgnoreCase(actualMimeType);
   }
 }

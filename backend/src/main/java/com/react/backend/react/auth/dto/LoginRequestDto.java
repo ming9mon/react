@@ -1,4 +1,4 @@
 package com.react.backend.react.auth.dto;
 
-public class LoginDto {
+public class LoginRequestDto {
 }

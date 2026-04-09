@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class SignUpReqDto extends BaseDto {
+public class SignUpRequestDto extends BaseDto {
   @NotBlank(message = "아이디는 필수입니다.")
   @Size(min = 4, max = 20, message = "아이디는 4~20자여야 합니다.")
   String userId;

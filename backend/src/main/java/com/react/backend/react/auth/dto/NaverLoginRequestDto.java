@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NaverLoginReqDto {
+public class NaverLoginRequestDto {
     private String code;
 }

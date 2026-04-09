@@ -20,7 +20,7 @@ public class BoardServiceImpl implements BoardService {
 
     public Page<BoardListResponseDto> selectBoardList(BoardListRequestDto requestDto) throws Exception {
         Sort sort = Sort.by(Sort.Direction.DESC, requestDto.getSortBy());
-        Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getPageSite(), sort);
+        Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getPageSize(), sort);
 
         Page<Board> boards = boardRepository.findAll(pageable);
 

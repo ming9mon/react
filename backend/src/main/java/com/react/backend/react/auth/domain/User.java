@@ -36,8 +36,9 @@ public class User {
   @Column(columnDefinition = "ENUM('M', 'F')")
   private Sex sex; // 성별
 
+  @Builder.Default
   @Enumerated(EnumType.STRING)
-  private Provider provider = Provider.local; // 로그인 제공자, default: local
+  private Provider provider = Provider.LOCAL; // 로그인 제공자, default: LOCAL
 
   private String providerId; // 소셜 로그인 제공자별 고유 ID
 
@@ -65,6 +66,6 @@ public class User {
   }
 
   public enum Provider {
-    local, kakao, google, naver
+    LOCAL, KAKAO, GOOGLE, NAVER
   }
 }
