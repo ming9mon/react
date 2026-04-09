@@ -3,3 +3,9 @@ export interface ApiResponse<T> {
 	message: string;
 	body: T;
 }
+
+export interface ApiConfig {
+	url?: string;
+	subUrl?: string;
+	body?: any;
+}

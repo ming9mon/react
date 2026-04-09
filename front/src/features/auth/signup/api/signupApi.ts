@@ -1,6 +1,6 @@
 import {SIGNUP_API} from "../model/constants";
 import {post} from "@/shared/api/apiClient";
-import {ApiResponse} from "@/shared/types/apiResponse";
+import {ApiResponse} from "@/shared/types/api";
 
 // 회원가입
 export const signup = async (
