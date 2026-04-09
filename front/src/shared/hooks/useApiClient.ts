@@ -1,8 +1,10 @@
 import { usePathname } from "next/navigation";
-import { ApiConfig } from "../types/api";
+import { ApiConfig, ApiResponse, API_CONFIG_KEYS } from "../types/api";
 import * as apiClient from "../api/apiClient";
+import { AxiosResponse } from "axios";
 
 export const useApiClient = () => {
+    const pahtName = usePathname();
 
     const toQueryString = (params?: Record<string, unknown>) => {
         if (!params) return ''
@@ -36,17 +38,37 @@ export const useApiClient = () => {
         if (apiConfig?.url) {
             basePath = apiConfig.url;
         }  else {
-            basePath = usePathname()
+            basePath = pahtName
         }
         
-        if (apiConfig?.subUrl) {
-            return joinUrl(basePath, apiConfig.subUrl);
+        
+        if (apiConfig?.prefixPath) {
+            return joinUrl(apiConfig.prefixPath, basePath);
+        }
+        
+        if (apiConfig?.subfixPath) {
+            return joinUrl(basePath, apiConfig.subfixPath);
         }
 
         return basePath;
     }
 
-    const get = async (apiConfig?: ApiConfig) => {
+    const isApiConfig = (param: any): param is ApiConfig => {
+        return param !== null &&
+            typeof param === "object" &&
+            API_CONFIG_KEYS.some((key) => key in param);
+    }
+
+    const getApiConfig = (param?: ApiConfig | any): ApiConfig => {
+        if (isApiConfig(param)) {
+            return param;
+        } else {
+            return { body: param }
+        }
+    }
+
+    const search = async (param?: ApiConfig | any): Promise<ApiResponse<any>> => {
+        const apiConfig = getApiConfig(param);
         const queryString = toQueryString(apiConfig?.body)
 
         const url = queryString ? `${getApiUrl()}?${queryString}` 
@@ -55,13 +77,20 @@ export const useApiClient = () => {
         return await apiClient.get(url);
     }
 
-    const post = async (apiConfig?: ApiConfig) => {
-        return await apiClient.post(getApiUrl(), apiConfig?.body);
+    const save = async (param?: ApiConfig | any): Promise<ApiResponse<any>> => {
+        return await post(param);
     }
 
-    const download = async (apiConfig?: ApiConfig) => {
+    const post = async (param?: ApiConfig | any): Promise<ApiResponse<any>> => {
+        const apiConfig = getApiConfig(param);
+        console.log(apiConfig)
+        return await apiClient.post(getApiUrl(apiConfig), apiConfig?.body);
+    }
+
+    const download = async (param?: ApiConfig | any): Promise<AxiosResponse<Blob>> => {
+        const apiConfig = getApiConfig(param);
         return await apiClient.download(getApiUrl(apiConfig), apiConfig?.body);
     }
 
-    return { get, post, download };
+    return { search, save, post, download };
 }

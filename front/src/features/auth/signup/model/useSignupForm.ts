@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { signupSchema, SignupFormData } from "../model/schema";
 import { SignupPayload } from "../model/types";
-import { signup } from "../api/signupApi";
 import { HOME } from "@/shared/constants";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import { PREFIX_PATH } from "./constants";
 
 function toFormData(data: SignupPayload): FormData {
   const fd = new FormData();
@@ -28,10 +29,15 @@ export function useSignupForm() {
     resolver: zodResolver(signupSchema),
   });
 
+  const { post } = useApiClient();
+
   const onSubmit = async (data: SignupFormData) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passWdCheck, ...payload } = data;
-    const { code } = await signup(toFormData(payload));
+    const { code } = await post({
+      prefixPath: PREFIX_PATH,
+      body: toFormData(data)
+    });
+
     if (code === "200") {
       alert("회원가입 되었습니다.");
       router.push(HOME);

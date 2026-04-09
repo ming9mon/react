@@ -4,8 +4,11 @@ export interface ApiResponse<T> {
 	body: T;
 }
 
+export const API_CONFIG_KEYS = ["url", "prefixPath", "subfixPath", "body"] as const;
+
 export interface ApiConfig {
 	url?: string;
-	subUrl?: string;
+	prefixPath?: string;
+	subfixPath?: string;
 	body?: any;
 }
