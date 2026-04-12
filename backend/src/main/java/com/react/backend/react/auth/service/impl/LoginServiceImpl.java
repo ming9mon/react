@@ -2,6 +2,7 @@ package com.react.backend.react.auth.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.react.backend.configuration.exception.RestException;
 import com.react.backend.react.auth.dto.*;
 import com.react.backend.shared.repository.UserRepository;
 import com.react.backend.react.auth.service.LoginService;
@@ -19,7 +20,6 @@ import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -48,12 +48,12 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) throws Exception {
         TUser user = userRepository.findByUserId(loginRequestDto.getUserId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."));
+                .orElseThrow(() -> new RestException("아이디 또는 비밀번호가 올바르지 않습니다."));
 
         if (!passwordEncoder.matches(loginRequestDto.getPassWd(), user.getPasswd())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다.");
+            throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
         UserInfoDto userInfoDto = new UserInfoDto();
@@ -118,7 +118,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String naverLogin(NaverLoginRequestDto naverLoginRequestDto) throws Exception {
+    public String naverLogin(NaverLoginRequestDto naverLoginRequestDto) {
         String code = naverLoginRequestDto.getCode();
 
         // 1. 네이버에 access token 요청

@@ -20,7 +20,7 @@ public class AuthController {
      * @return tokenInfo, userInfo, userAuth
      */
     @PostMapping("/login")
-    public LoginResponseDto login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
+    public LoginResponseDto login(@Validated @RequestBody LoginRequestDto loginRequestDto) throws Exception {
         return loginService.login(loginRequestDto);
     }
 
@@ -31,9 +31,6 @@ public class AuthController {
 
     /**
      * 네이버 로그인
-     * @param naverLoginRequestDto
-     * @return
-     * @throws Exception
      */
     @PostMapping("/naver")
     public String naverLogin(@RequestBody NaverLoginRequestDto naverLoginRequestDto) throws Exception {
@@ -42,9 +39,6 @@ public class AuthController {
 
     /**
      * 회원가입
-     * @param signUpRequestDto
-     * @return
-     * @throws Exception
      */
     @PostMapping("/signup")
     public void signUp(@Validated @ModelAttribute SignUpRequestDto signUpRequestDto) throws Exception {

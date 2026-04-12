@@ -9,7 +9,7 @@ public interface LoginService {
     /**
      * 일반 로그인
      */
-    LoginResponseDto login(LoginRequestDto loginRequestDto);
+    LoginResponseDto login(LoginRequestDto loginRequestDto) throws Exception;
 
     /**
      * 카카오 로그인
