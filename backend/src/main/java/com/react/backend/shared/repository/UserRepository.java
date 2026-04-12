@@ -1,4 +1,4 @@
-package com.react.backend.react.auth.repository;
+package com.react.backend.shared.repository;
 
 import com.react.backend.shared.entity.TUser;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,7 +3,7 @@ package com.react.backend.react.auth.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.react.backend.react.auth.dto.*;
-import com.react.backend.react.auth.repository.UserRepository;
+import com.react.backend.shared.repository.UserRepository;
 import com.react.backend.react.auth.service.LoginService;
 import com.react.backend.shared.dto.FileSaveResultDto;
 import com.react.backend.shared.dto.TokenInfoDto;

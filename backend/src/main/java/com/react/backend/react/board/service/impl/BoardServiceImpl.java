@@ -3,7 +3,7 @@ package com.react.backend.react.board.service.impl;
 import com.react.backend.react.board.dto.BoardDtlResponseDto;
 import com.react.backend.react.board.dto.BoardListRequestDto;
 import com.react.backend.react.board.dto.BoardListResponseDto;
-import com.react.backend.react.board.repository.BoardRepository;
+import com.react.backend.shared.repository.BoardRepository;
 import com.react.backend.react.board.service.BoardService;
 import com.react.backend.shared.entity.TBoard;
 import lombok.RequiredArgsConstructor;
