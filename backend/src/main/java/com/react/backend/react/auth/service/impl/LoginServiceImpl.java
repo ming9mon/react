@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.react.backend.configuration.exception.RestException;
 import com.react.backend.react.auth.dto.*;
+import com.react.backend.shared.entity.TLoginHistory;
+import com.react.backend.shared.repository.LoginHistoryRepository;
 import com.react.backend.shared.repository.UserRepository;
 import com.react.backend.react.auth.service.LoginService;
 import com.react.backend.shared.dto.FileSaveResultDto;
@@ -13,6 +15,7 @@ import com.react.backend.shared.enums.FileType;
 import com.react.backend.shared.service.CommonService;
 import com.react.backend.shared.entity.TUser;
 import com.react.backend.shared.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,10 +23,14 @@ import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -32,6 +39,7 @@ public class LoginServiceImpl implements LoginService {
 
     private final CommonService commonService;
     private final UserRepository userRepository;
+    private final LoginHistoryRepository loginHistoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -49,10 +57,19 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) throws Exception {
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(
+                RequestContextHolder.getRequestAttributes())).getRequest();
+
         TUser user = userRepository.findByUserId(loginRequestDto.getUserId())
-                .orElseThrow(() -> new RestException("아이디 또는 비밀번호가 올바르지 않습니다."));
+                .orElse(null);
+
+        if (user == null) {
+            saveLoginHistory(null, 'F', "존재하지 않는 아이디", 'L', request);
+            throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
 
         if (!passwordEncoder.matches(loginRequestDto.getPassWd(), user.getPasswd())) {
+            saveLoginHistory(user, 'F', "비밀번호 불일치", user.getProviderTypeCd(), request);
             throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
@@ -68,6 +85,8 @@ public class LoginServiceImpl implements LoginService {
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
+        saveLoginHistory(user, 'S', null, user.getProviderTypeCd(), request);
+
         return LoginResponseDto.builder()
                 .tokenInfo(TokenInfoDto.builder()
                         .accessToken(accessToken)
@@ -80,6 +99,19 @@ public class LoginServiceImpl implements LoginService {
                         .build())
                 .userAuth(null) // TODO
                 .build();
+    }
+
+    private void saveLoginHistory(TUser user, Character resultCd, String resultMsg,
+                                  Character providerTypeCd, HttpServletRequest request) {
+        TLoginHistory history = new TLoginHistory();
+        history.setUserSeq(user != null ? String.valueOf(user.getId()) : null);
+        history.setLoginDate(Instant.now());
+        history.setLoginResultCd(String.valueOf(resultCd));
+        history.setLoginResultMsg(resultMsg);
+        history.setProviderTypeCd(providerTypeCd);
+        history.setAccessIp(request.getRemoteAddr());
+        history.setUserAgent(request.getHeader("User-Agent"));
+        loginHistoryRepository.save(history);
     }
 
     @Override
