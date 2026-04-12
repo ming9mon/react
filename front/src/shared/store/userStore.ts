@@ -1,25 +1,14 @@
 import {create} from "zustand";
 import {createJSONStorage, persist} from "zustand/middleware";
-
-interface UserInfo {
-	userId: string;      		// 사용자 아이디
-	userName: string;    		// 이름
-	nickName: string;    		// 닉네임
-	profilePicUrl: string;	// 사진 URL
-}
-
-interface UserInfoResponse {
-	userInfo: UserInfo
-	accessToken: string
-	refreshToken: string
-}
+import { UserInfo, MenuAuth, LoginResponse } from "@/shared/types/user";
 
 interface UserStore {
-	userInfo: UserInfo | null
-	accessToken: string | null
-	refreshToken: string | null
+	userInfo: UserInfo | null;
+	menuAuth: MenuAuth | null;
+	accessToken: string | null;
+	refreshToken: string | null;
 
-	setUserInfo: (info: UserInfoResponse) => void;
+	setUserInfo: (info: LoginResponse) => void;
 	clearUser: () => void;
 }
 
@@ -27,12 +16,14 @@ export const useUserStore = create<UserStore>()(
 	persist(
 		(set) => ({
 			userInfo: null,
+			menuAuth: null,
 			accessToken: null,
 			refreshToken: null,
 
-			setUserInfo: (info: UserInfoResponse) => {
+			setUserInfo: (info: LoginResponse) => {
 				set({
 					userInfo: info?.userInfo ?? null,
+					menuAuth: info?.menuAuth ?? {},
 					accessToken: info?.accessToken ?? null,
 					refreshToken: info?.refreshToken ?? null,
 				})
@@ -40,6 +31,7 @@ export const useUserStore = create<UserStore>()(
 			clearUser: () => {
 				set({
 					userInfo: null,
+					menuAuth: null,
 					accessToken: null,
 					refreshToken: null,
 				})

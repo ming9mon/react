@@ -3,7 +3,7 @@ import { ApiConfig, ApiResponse, API_CONFIG_KEYS } from "../types/api";
 import * as apiClient from "../api/apiClient";
 import { AxiosResponse } from "axios";
 
-export const useApiClient = () => {
+export const useApiClient = <T = any>() => {
     const pahtName = usePathname();
 
     const toQueryString = (params?: Record<string, unknown>) => {
@@ -67,23 +67,22 @@ export const useApiClient = () => {
         }
     }
 
-    const search = async (param?: ApiConfig | any): Promise<ApiResponse<any>> => {
+    const search = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
         const apiConfig = getApiConfig(param);
         const queryString = toQueryString(apiConfig?.body)
 
-        const url = queryString ? `${getApiUrl()}?${queryString}` 
+        const url = queryString ? `${getApiUrl()}?${queryString}`
         : getApiUrl()
 
         return await apiClient.get(url);
     }
 
-    const save = async (param?: ApiConfig | any): Promise<ApiResponse<any>> => {
+    const save = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
         return await post(param);
     }
 
-    const post = async (param?: ApiConfig | any): Promise<ApiResponse<any>> => {
+    const post = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
         const apiConfig = getApiConfig(param);
-        console.log(apiConfig)
         return await apiClient.post(getApiUrl(apiConfig), apiConfig?.body);
     }
 

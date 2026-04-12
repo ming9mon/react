@@ -1,7 +1,7 @@
 package com.react.backend.react.common.service.impl;
 
 import com.react.backend.configuration.exception.RestException;
-import com.react.backend.configuration.util.FileTypeValidator;
+import com.react.backend.shared.util.FileTypeValidator;
 import com.react.backend.react.common.dto.FileSaveResultDto;
 import com.react.backend.react.common.enums.FileType;
 import com.react.backend.react.common.service.CommonService;

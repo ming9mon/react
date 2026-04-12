@@ -24,7 +24,7 @@ export default function LoginModal() {
           <div className="flex flex-col gap-4">
             <div className="grid gap-2">
               <CommonLabel htmlFor="userId">아이디</CommonLabel>
-              <Input type="text" placeholder="ID" {...register("userId")} />
+              <Input type="text" placeholder="ID" maxLength={20} {...register("userId")} />
               {errors.userId && <p className="text-sm text-red-500">{errors.userId.message}</p>}
             </div>
 
@@ -35,7 +35,7 @@ export default function LoginModal() {
                   비밀번호 찾기
                 </a>
               </div>
-              <Input id="passWd" type="password" placeholder="password" {...register("passWd")} />
+              <Input id="passWd" type="password" placeholder="password" maxLength={20} {...register("passWd")} />
               {errors.passWd && <p className="text-sm text-red-500">{errors.passWd.message}</p>}
             </div>
 

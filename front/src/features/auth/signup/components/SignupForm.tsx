@@ -34,7 +34,7 @@ export default function SignupForm() {
                 {/* 아이디 */}
                 <div className="grid gap-3">
                   <CommonLabel htmlFor="userId" required>아이디</CommonLabel>
-                  <Input id="userId" {...register("userId")} maxLength={12} />
+                  <Input id="userId" {...register("userId")} maxLength={20} />
                   {errors.userId && <p className="text-sm text-red-500">{errors.userId.message}</p>}
                 </div>
 
