@@ -1,11 +1,7 @@
 package com.react.backend.react.auth.controller;
 
-import com.react.backend.configuration.util.JwtUtil;
-import com.react.backend.react.auth.dto.KakaoLoginRequestDto;
-import com.react.backend.react.auth.dto.NaverLoginRequestDto;
-import com.react.backend.react.auth.dto.SignUpRequestDto;
+import com.react.backend.react.auth.dto.*;
 import com.react.backend.react.auth.service.LoginService;
-import com.react.backend.react.common.dto.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,22 +13,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final JwtUtil jwtUtil;
     private final LoginService loginService;
 
     /**
      * 일반 로그인
-     * @return 공통정보 return
+     * @return tokenInfo, userInfo, userAuth
      */
     @PostMapping("/login")
-    public Map<String, String> login() {
-
-        UserInfoDto userInfoDto = new UserInfoDto();
-
-        String accessToken = jwtUtil.generateAccessToken(userInfoDto);
-        String refreshToken = jwtUtil.generateRefreshToken(userInfoDto);
-
-        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+    public LoginResponseDto login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
+        return loginService.login(loginRequestDto);
     }
 
     @PostMapping("/kakao")

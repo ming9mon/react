@@ -1,7 +1,7 @@
 package com.react.backend.configuration.config;
 
 import com.react.backend.configuration.filter.JwtAuthenticationFilter;
-import com.react.backend.configuration.util.JwtUtil;
+import com.react.backend.shared.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

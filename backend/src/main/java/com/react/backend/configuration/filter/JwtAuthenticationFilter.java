@@ -1,6 +1,6 @@
 package com.react.backend.configuration.filter;
 
-import com.react.backend.configuration.util.JwtUtil;
+import com.react.backend.shared.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

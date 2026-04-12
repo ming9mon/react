@@ -2,25 +2,24 @@ package com.react.backend.react.auth.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.react.backend.react.auth.domain.User;
-import com.react.backend.react.auth.dto.KakaoLoginRequestDto;
-import com.react.backend.react.auth.dto.NaverLoginRequestDto;
-import com.react.backend.react.auth.dto.SignUpRequestDto;
+import com.react.backend.react.auth.dto.*;
 import com.react.backend.react.auth.repository.UserRepository;
 import com.react.backend.react.auth.service.LoginService;
-import com.react.backend.react.common.dto.FileSaveResultDto;
-import com.react.backend.react.common.enums.FileType;
-import com.react.backend.react.common.service.CommonService;
+import com.react.backend.shared.dto.FileSaveResultDto;
+import com.react.backend.shared.dto.TokenInfoDto;
+import com.react.backend.shared.dto.UserInfoDto;
+import com.react.backend.shared.enums.FileType;
+import com.react.backend.shared.service.CommonService;
+import com.react.backend.shared.entity.TUser;
+import com.react.backend.shared.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ public class LoginServiceImpl implements LoginService {
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil;
 
     @Value("${kakao.login.info.url}")
     private String kakaoUserInfoUrl;
@@ -47,12 +47,41 @@ public class LoginServiceImpl implements LoginService {
     private String naverClientSecret;
 
 
-    /**
-     * 카카오 로그인
-     * @param kakaoLoginRequestDto
-     * @return
-     * @throws Exception
-     */
+    @Override
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+        TUser user = userRepository.findByUserId(loginRequestDto.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."));
+
+        if (!passwordEncoder.matches(loginRequestDto.getPassWd(), user.getPasswd())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setUserId(user.getUserId());
+        userInfoDto.setUserNm(user.getUserNm());
+        userInfoDto.setNickname(user.getNickname());
+
+        String accessToken = jwtUtil.generateAccessToken(userInfoDto);
+        String refreshToken = jwtUtil.generateRefreshToken(userInfoDto);
+
+        // refreshToken DB 저장
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return LoginResponseDto.builder()
+                .tokenInfo(TokenInfoDto.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build())
+                .userInfo(UserInfoDto.builder()
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .nickname(user.getNickname())
+                        .build())
+                .userAuth(null) // TODO
+                .build();
+    }
+
     @Override
     public Map<String, Object> kakaoLogin(KakaoLoginRequestDto kakaoLoginRequestDto) throws Exception {
         String accessToken = kakaoLoginRequestDto.getAccessToken();
@@ -88,12 +117,6 @@ public class LoginServiceImpl implements LoginService {
         return userInfo;
     }
 
-    /**
-     * 네이버 로그인
-     * @param naverLoginRequestDto
-     * @return
-     * @throws Exception
-     */
     @Override
     public String naverLogin(NaverLoginRequestDto naverLoginRequestDto) throws Exception {
         String code = naverLoginRequestDto.getCode();
@@ -126,11 +149,6 @@ public class LoginServiceImpl implements LoginService {
         return code;
     }
 
-    /**
-     * 회원가입
-     * @param signUpRequestDto
-     * @throws Exception
-     */
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) throws Exception {
         if (userRepository.existsByUserId(signUpRequestDto.getUserId())) {
@@ -147,16 +165,15 @@ public class LoginServiceImpl implements LoginService {
             profileImgUrl = fileSaveResult.getSavedFilePath() + File.separator + fileSaveResult.getSavedFileName();
         }
 
-        User user = User.builder()
-            .userId(signUpRequestDto.getUserId())
-            .passWd(passwordEncoder.encode(signUpRequestDto.getPassWd()))
-            .userNm(signUpRequestDto.getUserNm())
-            .nickname(signUpRequestDto.getNickname())
-            .sex(User.Sex.valueOf(signUpRequestDto.getSex()))
-            .email(signUpRequestDto.getEmail())
-            .profileImgUrl(profileImgUrl)
-            .provider(User.Provider.LOCAL)
-            .build();
+        TUser user = new TUser();
+        user.setUserId(signUpRequestDto.getUserId());
+        user.setPasswd(passwordEncoder.encode(signUpRequestDto.getPassWd()));
+        user.setUserNm(signUpRequestDto.getUserNm());
+        user.setNickname(signUpRequestDto.getNickname());
+        user.setSex(signUpRequestDto.getSex());
+        user.setEmail(signUpRequestDto.getEmail());
+        user.setProfileImgUrl(profileImgUrl);
+        user.setProvider('L'); // LOCAL
 
         userRepository.save(user);
     }

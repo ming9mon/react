@@ -1,7 +1,7 @@
-package com.react.backend.react.common.service;
+package com.react.backend.shared.service;
 
-import com.react.backend.react.common.dto.FileSaveResultDto;
-import com.react.backend.react.common.enums.FileType;
+import com.react.backend.shared.dto.FileSaveResultDto;
+import com.react.backend.shared.enums.FileType;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CommonService {

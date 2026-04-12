@@ -1,4 +1,4 @@
-package com.react.backend.react.common.dto;
+package com.react.backend.shared.dto;
 
 import lombok.Builder;
 import lombok.Getter;

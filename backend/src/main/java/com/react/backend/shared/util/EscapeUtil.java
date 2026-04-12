@@ -1,4 +1,4 @@
-package com.react.backend.configuration.util;
+package com.react.backend.shared.util;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

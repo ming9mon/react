@@ -1,11 +1,11 @@
 package com.react.backend.react.board.service.impl;
 
-import com.react.backend.react.board.domain.Board;
 import com.react.backend.react.board.dto.BoardDtlResponseDto;
 import com.react.backend.react.board.dto.BoardListRequestDto;
 import com.react.backend.react.board.dto.BoardListResponseDto;
 import com.react.backend.react.board.repository.BoardRepository;
 import com.react.backend.react.board.service.BoardService;
+import com.react.backend.shared.entity.TBoard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,19 +22,19 @@ public class BoardServiceImpl implements BoardService {
         Sort sort = Sort.by(Sort.Direction.DESC, requestDto.getSortBy());
         Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getPageSize(), sort);
 
-        Page<Board> boards = boardRepository.findAll(pageable);
+        Page<TBoard> boards = boardRepository.findAll(pageable);
 
         return boards.map(board -> BoardListResponseDto.builder()
-                        .seq(board.getSeq())
+                        .seq(board.getId())
                         .title(board.getTitle())
                         .build()
                 );
     }
 
     public BoardDtlResponseDto getDetail(Long seq) {
-        Board board = boardRepository
+        TBoard board = boardRepository
                 .findById(seq)
-                .orElseThrow(() ->new IllegalArgumentException("존재하지 않는 게시물"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물"));
 
         return BoardDtlResponseDto.builder()
                 .title(board.getTitle())

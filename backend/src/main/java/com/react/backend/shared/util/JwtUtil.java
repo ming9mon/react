@@ -1,7 +1,7 @@
-package com.react.backend.configuration.util;
+package com.react.backend.shared.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.react.backend.react.common.dto.UserInfoDto;
+import com.react.backend.shared.dto.UserInfoDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

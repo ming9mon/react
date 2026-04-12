@@ -1,4 +1,4 @@
-package com.react.backend.react.common.enums;
+package com.react.backend.shared.enums;
 
 import java.util.Arrays;
 import java.util.Optional;

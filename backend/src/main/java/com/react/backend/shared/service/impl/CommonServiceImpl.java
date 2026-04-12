@@ -1,10 +1,10 @@
-package com.react.backend.react.common.service.impl;
+package com.react.backend.shared.service.impl;
 
 import com.react.backend.configuration.exception.RestException;
+import com.react.backend.shared.dto.FileSaveResultDto;
+import com.react.backend.shared.enums.FileType;
+import com.react.backend.shared.service.CommonService;
 import com.react.backend.shared.util.FileTypeValidator;
-import com.react.backend.react.common.dto.FileSaveResultDto;
-import com.react.backend.react.common.enums.FileType;
-import com.react.backend.react.common.service.CommonService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

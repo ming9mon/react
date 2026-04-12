@@ -1,7 +1,7 @@
-package com.react.backend.configuration.util;
+package com.react.backend.shared.util;
 
-import com.react.backend.react.common.enums.FileType;
-import com.react.backend.react.common.enums.ImageFileType;
+import com.react.backend.shared.enums.FileType;
+import com.react.backend.shared.enums.ImageFileType;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 import org.springframework.web.multipart.MultipartFile;

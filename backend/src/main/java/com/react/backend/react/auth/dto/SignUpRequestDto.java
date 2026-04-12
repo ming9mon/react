@@ -1,6 +1,6 @@
 package com.react.backend.react.auth.dto;
 
-import com.react.backend.react.common.dto.BaseDto;
+import com.react.backend.shared.dto.BaseDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

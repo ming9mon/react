@@ -1,8 +1,8 @@
 package com.react.backend.configuration.aspect;
 
-import com.react.backend.configuration.util.JwtUtil;
-import com.react.backend.react.common.dto.BaseDto;
-import com.react.backend.react.common.dto.UserInfoDto;
+import com.react.backend.shared.dto.UserInfoDto;
+import com.react.backend.shared.dto.BaseDto;
+import com.react.backend.shared.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;

@@ -1,6 +1,6 @@
 export interface UserInfo {
 	userId: string;
-	userName: string;
+	userNm: string;
 	nickName: string;
 	profilePicUrl: string;
 }
