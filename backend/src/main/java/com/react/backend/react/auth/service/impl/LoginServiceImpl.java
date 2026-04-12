@@ -173,7 +173,7 @@ public class LoginServiceImpl implements LoginService {
         user.setSex(signUpRequestDto.getSex());
         user.setEmail(signUpRequestDto.getEmail());
         user.setProfileImgUrl(profileImgUrl);
-        user.setProvider('L'); // LOCAL
+        user.setProviderTypeCd('L'); // LOCAL
 
         userRepository.save(user);
     }

@@ -44,8 +44,8 @@ public class TUser extends BaseEntity {
   private String nickname;
 
   @NotNull
-  @Column(name = "PROVIDER", nullable = false)
-  private Character provider;
+  @Column(name = "PROVIDER_TYPE_CD", nullable = false)
+  private Character providerTypeCd;
 
   @Size(max = 100)
   @Column(name = "EMAIL", length = 100)
