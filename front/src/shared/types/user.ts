@@ -1,7 +1,7 @@
 export interface UserInfo {
 	userId: string;
 	userNm: string;
-	nickName: string;
+	nickname: string;
 	profilePicUrl: string;
 }
 

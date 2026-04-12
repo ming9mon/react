@@ -7,9 +7,11 @@ interface UserStore {
 	menuAuth: MenuAuth | null;
 	accessToken: string | null;
 	refreshToken: string | null;
+	_hasHydrated: boolean;
 
 	setUserInfo: (info: LoginResponse) => void;
 	clearUser: () => void;
+	setHasHydrated: (state: boolean) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -19,6 +21,7 @@ export const useUserStore = create<UserStore>()(
 			menuAuth: null,
 			accessToken: null,
 			refreshToken: null,
+			_hasHydrated: false,
 
 			setUserInfo: (info: LoginResponse) => {
 				set({
@@ -35,11 +38,15 @@ export const useUserStore = create<UserStore>()(
 					accessToken: null,
 					refreshToken: null,
 				})
-			}
+			},
+			setHasHydrated: (state: boolean) => set({ _hasHydrated: state }),
 		}),
 		{
 			name: 'user-storage',
-			storage: createJSONStorage(() => sessionStorage)
+			storage: createJSONStorage(() => sessionStorage),
+			onRehydrateStorage: () => (state) => {
+				state?.setHasHydrated(true);
+			},
 		}
 	)
 )
