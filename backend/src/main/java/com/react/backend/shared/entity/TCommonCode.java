@@ -22,8 +22,8 @@ public class TCommonCode extends BaseEntity {
 
   @MapsId("groupCd")
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "GROUP_CD", nullable = false)
-  private com.react.backend.shared.entity.TCommonCodeGroup groupCd;
+  @JoinColumn(name = "GROUP_CD", nullable = false, columnDefinition = "varchar(50)")
+  private TCommonCodeGroup groupCd;
 
   @Size(max = 100)
   @NotNull
