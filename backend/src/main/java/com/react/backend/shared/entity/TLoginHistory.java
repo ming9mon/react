@@ -21,8 +21,8 @@ public class TLoginHistory {
 
   @Size(max = 50)
   @NotNull
-  @Column(name = "USER_SEQ", nullable = false, length = 50)
-  private String userSeq;
+  @Column(name = "USER_ID", nullable = false, length = 50)
+  private String userId;
 
   @NotNull
   @ColumnDefault("current_timestamp()")

@@ -20,15 +20,15 @@ public class TCommonCode extends BaseEntity {
   @EmbeddedId
   private TCommonCodeId id;
 
-  @MapsId("groupCd")
+  @MapsId("groupCode")
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "GROUP_CD", nullable = false, columnDefinition = "varchar(50)")
-  private TCommonCodeGroup groupCd;
+  @JoinColumn(name = "GROUP_CODE", nullable = false)
+  private com.react.backend.shared.entity.TCommonCodeGroup groupCode;
 
   @Size(max = 100)
   @NotNull
-  @Column(name = "CODE_NM", nullable = false, length = 100)
-  private String codeNm;
+  @Column(name = "CODE_TEXT", nullable = false, length = 100)
+  private String codeText;
 
   @Size(max = 500)
   @Column(name = "CODE_DESC", length = 500)

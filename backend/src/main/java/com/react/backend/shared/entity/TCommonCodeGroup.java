@@ -20,8 +20,8 @@ import org.hibernate.annotations.ColumnDefault;
 public class TCommonCodeGroup extends BaseEntity {
   @Id
   @Size(max = 50)
-  @Column(name = "GROUP_CD", nullable = false, length = 50)
-  private String groupCd;
+  @Column(name = "GROUP_CODE", nullable = false, length = 50)
+  private String groupCode;
 
   @Size(max = 500)
   @Column(name = "GROUP_DESC", length = 500)

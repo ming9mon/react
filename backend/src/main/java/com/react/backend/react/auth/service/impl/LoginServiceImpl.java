@@ -64,12 +64,12 @@ public class LoginServiceImpl implements LoginService {
                 .orElse(null);
 
         if (user == null) {
-            saveLoginHistory(null, 'F', "존재하지 않는 아이디", 'L', request);
+            saveLoginHistory(loginRequestDto.getUserId(), 'F', "존재하지 않는 아이디", 'L', request);
             throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
         if (!passwordEncoder.matches(loginRequestDto.getPassWd(), user.getPasswd())) {
-            saveLoginHistory(user, 'F', "비밀번호 불일치", user.getProviderTypeCd(), request);
+            saveLoginHistory(loginRequestDto.getUserId(), 'F', "비밀번호 불일치", user.getProviderTypeCd(), request);
             throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
@@ -85,7 +85,7 @@ public class LoginServiceImpl implements LoginService {
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
-        saveLoginHistory(user, 'S', null, user.getProviderTypeCd(), request);
+        saveLoginHistory(loginRequestDto.getUserId(), 'S', null, user.getProviderTypeCd(), request);
 
         return LoginResponseDto.builder()
                 .tokenInfo(TokenInfoDto.builder()
@@ -101,10 +101,10 @@ public class LoginServiceImpl implements LoginService {
                 .build();
     }
 
-    private void saveLoginHistory(TUser user, Character resultCd, String resultMsg,
+    private void saveLoginHistory(String userId, Character resultCd, String resultMsg,
                                   Character providerTypeCd, HttpServletRequest request) {
         TLoginHistory history = new TLoginHistory();
-        history.setUserSeq(user != null ? String.valueOf(user.getId()) : null);
+        history.setUserId(userId);
         history.setLoginDate(Instant.now());
         history.setLoginResultCd(String.valueOf(resultCd));
         history.setLoginResultMsg(resultMsg);
