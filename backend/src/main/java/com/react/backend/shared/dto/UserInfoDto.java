@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoDto {
+    private Long userSeq;
     private String userId;
     private String userNm;
     private String nickname;

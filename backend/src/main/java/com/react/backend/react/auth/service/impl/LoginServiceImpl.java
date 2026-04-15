@@ -64,16 +64,16 @@ public class LoginServiceImpl implements LoginService {
                 .orElse(null);
 
         if (user == null) {
-            saveLoginHistory(loginRequestDto.getUserId(), 'F', "존재하지 않는 아이디", 'L', request);
             throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
         if (!passwordEncoder.matches(loginRequestDto.getPassWd(), user.getPasswd())) {
-            saveLoginHistory(loginRequestDto.getUserId(), 'F', "비밀번호 불일치", user.getProviderTypeCd(), request);
+            saveLoginHistory(user, 'F', "비밀번호 불일치", "L", request);
             throw new RestException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
         UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setUserSeq(user.getId());
         userInfoDto.setUserId(user.getUserId());
         userInfoDto.setUserNm(user.getUserNm());
         userInfoDto.setNickname(user.getNickname());
@@ -85,7 +85,7 @@ public class LoginServiceImpl implements LoginService {
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
-        saveLoginHistory(loginRequestDto.getUserId(), 'S', null, user.getProviderTypeCd(), request);
+        saveLoginHistory(user, 'S', null, "L", request);
 
         return LoginResponseDto.builder()
                 .tokenInfo(TokenInfoDto.builder()
@@ -99,19 +99,6 @@ public class LoginServiceImpl implements LoginService {
                         .build())
                 .userAuth(null) // TODO
                 .build();
-    }
-
-    private void saveLoginHistory(String userId, Character resultCd, String resultMsg,
-                                  Character providerTypeCd, HttpServletRequest request) {
-        TLoginHistory history = new TLoginHistory();
-        history.setUserId(userId);
-        history.setLoginDate(Instant.now());
-        history.setLoginResultCd(String.valueOf(resultCd));
-        history.setLoginResultMsg(resultMsg);
-        history.setProviderTypeCd(providerTypeCd);
-        history.setAccessIp(request.getRemoteAddr());
-        history.setUserAgent(request.getHeader("User-Agent"));
-        loginHistoryRepository.save(history);
     }
 
     @Override
@@ -204,9 +191,22 @@ public class LoginServiceImpl implements LoginService {
         user.setNickname(signUpRequestDto.getNickname());
         user.setSex(signUpRequestDto.getSex());
         user.setEmail(signUpRequestDto.getEmail());
+        user.setProviderTypeCd("L");
         user.setProfileImgUrl(profileImgUrl);
-        user.setProviderTypeCd('L'); // LOCAL
 
         userRepository.save(user);
+    }
+
+    private void saveLoginHistory(TUser user, Character resultCd, String resultMsg,
+                                  String providerTypeCd, HttpServletRequest request) {
+        TLoginHistory history = new TLoginHistory();
+        history.setUserSeq(user);
+        history.setLoginDate(Instant.now());
+        history.setLoginResultCd(String.valueOf(resultCd));
+        history.setLoginResultMsg(resultMsg);
+        history.setProviderTypeCd(providerTypeCd);
+        history.setAccessIp(request.getRemoteAddr());
+        history.setUserAgent(request.getHeader("User-Agent"));
+        loginHistoryRepository.save(history);
     }
 }

@@ -81,8 +81,10 @@ public class JwtUtil {
 
     public Authentication getAuthentication(String token) {
         Claims claims = extractAllClaims(token);
+        ObjectMapper mapper = new ObjectMapper();
+        UserInfoDto userInfo = mapper.convertValue(claims.get("userInfo"), UserInfoDto.class);
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("role"));
-        return new UsernamePasswordAuthenticationToken(claims.get("username"), token, authorities);
+        return new UsernamePasswordAuthenticationToken(userInfo != null ? userInfo.getUserSeq() : null, token, authorities);
     }
 
     // 토큰에서 클레임 추출

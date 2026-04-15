@@ -10,57 +10,63 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "t_user", uniqueConstraints = {
-    @UniqueConstraint(name = "USER_ID", columnNames = {"USER_ID"}),
-    @UniqueConstraint(name = "USER_NM", columnNames = {"USER_NM"})
+    @UniqueConstraint(name = "uk_t_user_01", columnNames = {"user_id"}),
+    @UniqueConstraint(name = "uk_t_user_02", columnNames = {"email"})
 })
 @AttributeOverrides({
-    @AttributeOverride(name = "createdAt", column = @Column(name = "CREATED_AT", nullable = false)),
-    @AttributeOverride(name = "createdBy", column = @Column(name = "CREATED_BY", nullable = false, length = 50)),
-    @AttributeOverride(name = "updatedAt", column = @Column(name = "UPDATED_AT", nullable = false)),
-    @AttributeOverride(name = "updatedBy", column = @Column(name = "UPDATED_BY", nullable = false, length = 50))
+    @AttributeOverride(name = "createdAt", column = @Column(name = "created_at", nullable = false)),
+    @AttributeOverride(name = "createdBy", column = @Column(name = "created_by", nullable = false)),
+    @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false)),
+    @AttributeOverride(name = "updatedBy", column = @Column(name = "updated_by", nullable = false))
 })
 public class TUser extends BaseEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "USER_SEQ", nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "t_user_id_gen")
+  @SequenceGenerator(name = "t_user_id_gen", sequenceName = "seq_user", initialValue = 10000000, allocationSize = 1)
+  @Column(name = "user_seq", nullable = false)
   private Long id;
 
   @Size(max = 50)
-  @Column(name = "USER_ID", length = 50)
+  @NotNull
+  @Column(name = "user_id", nullable = false, length = 50)
   private String userId;
 
   @Size(max = 255)
   @NotNull
-  @Column(name = "PASSWD", nullable = false)
+  @Column(name = "passwd", nullable = false)
   private String passwd;
 
   @Size(max = 50)
   @NotNull
-  @Column(name = "USER_NM", nullable = false, length = 50)
+  @Column(name = "user_nm", nullable = false, length = 50)
   private String userNm;
 
   @Size(max = 50)
-  @Column(name = "NICKNAME", length = 50)
+  @NotNull
+  @Column(name = "nickname", nullable = false, length = 50)
   private String nickname;
 
+  @Size(max = 1)
   @NotNull
-  @Column(name = "PROVIDER_TYPE_CD", nullable = false)
-  private Character providerTypeCd;
+  @Column(name = "provider_type_cd", nullable = false, length = 1)
+  private String providerTypeCd;
 
   @Size(max = 100)
-  @Column(name = "EMAIL", length = 100)
+  @NotNull
+  @Column(name = "email", nullable = false, length = 100)
   private String email;
 
-  @Lob
-  @Column(name = "SEX")
+  @Size(max = 1)
+  @NotNull
+  @Column(name = "sex", nullable = false, length = 1)
   private String sex;
 
   @Size(max = 255)
-  @Column(name = "PROFILE_IMG_URL")
+  @Column(name = "profile_img_url")
   private String profileImgUrl;
 
-  @Size(max = 255)
-  @Column(name = "REFRESH_TOKEN")
+  @Size(max = 500)
+  @Column(name = "refresh_token", length = 500)
   private String refreshToken;
 
 }

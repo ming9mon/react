@@ -12,24 +12,24 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "t_common_code_group")
 @AttributeOverrides({
-    @AttributeOverride(name = "createdAt", column = @Column(name = "CREATED_AT", nullable = false)),
-    @AttributeOverride(name = "createdBy", column = @Column(name = "CREATED_BY", nullable = false, length = 50)),
-    @AttributeOverride(name = "updatedAt", column = @Column(name = "UPDATED_AT", nullable = false)),
-    @AttributeOverride(name = "updatedBy", column = @Column(name = "UPDATED_BY", length = 50))
+    @AttributeOverride(name = "createdAt", column = @Column(name = "created_at", nullable = false)),
+    @AttributeOverride(name = "createdBy", column = @Column(name = "created_by", nullable = false)),
+    @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false)),
+    @AttributeOverride(name = "updatedBy", column = @Column(name = "updated_by", nullable = false))
 })
 public class TCommonCodeGroup extends BaseEntity {
   @Id
   @Size(max = 50)
-  @Column(name = "GROUP_CODE", nullable = false, length = 50)
+  @Column(name = "group_code", nullable = false, length = 50)
   private String groupCode;
 
   @Size(max = 500)
-  @Column(name = "GROUP_DESC", length = 500)
+  @Column(name = "group_desc", length = 500)
   private String groupDesc;
 
   @NotNull
   @ColumnDefault("'Y'")
-  @Column(name = "USE_YN", nullable = false)
-  private Character useYn;
+  @Column(name = "use_yn", nullable = false, length = Integer.MAX_VALUE)
+  private String useYn;
 
 }

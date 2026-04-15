@@ -44,7 +44,7 @@ dependencies {
 
 	/* DB */
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+	implementation 'org.postgresql:postgresql'
 
 	/* Tika - 파일 MIME 검사 */
 	implementation 'org.apache.tika:tika-core:3.2.2'

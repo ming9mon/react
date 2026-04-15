@@ -6,16 +6,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class AuditorAwareService implements AuditorAware<String> {
+public class AuditorAwareService implements AuditorAware<Long> {
 
   @Override
-  public Optional<String> getCurrentAuditor() {
+  public Optional<Long> getCurrentAuditor() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    if (auth == null || !auth.isAuthenticated()) {
-      return Optional.of("SYSTEM");
+    if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof Long)) {
+      return Optional.of(0L);
     }
 
-    return Optional.ofNullable(auth.getName());
+    return Optional.of((Long) auth.getPrincipal());
   }
 }
