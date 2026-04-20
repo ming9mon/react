@@ -177,6 +177,15 @@ public class LoginServiceImpl implements LoginService {
             throw new IllegalArgumentException("이미 존재하는 EMAIL입니다.");
         }
 
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(
+                RequestContextHolder.getRequestAttributes())).getRequest();
+
+        // Accept-Language 헤더 기반 언어 코드 추출 (ko_KR 형식)
+        String langCd = request.getLocale().toString();
+        if (langCd.isBlank()) {
+            langCd = "ko_KR";
+        }
+
         // 파일이 있으면 저장
         String profileImgUrl = null;
         if (signUpRequestDto.getProfileImg() != null) {
@@ -192,6 +201,7 @@ public class LoginServiceImpl implements LoginService {
         user.setSex(signUpRequestDto.getSex());
         user.setEmail(signUpRequestDto.getEmail());
         user.setProviderTypeCd("L");
+        user.setLangCd(langCd);
         user.setProfileImgUrl(profileImgUrl);
 
         userRepository.save(user);

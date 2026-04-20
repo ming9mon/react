@@ -13,36 +13,29 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class TCommonCodeId implements java.io.Serializable {
-  private static final long serialVersionUID = 778232799167617987L;
-  @Size(max = 50)
+public class TMultilingualValueId implements java.io.Serializable {
+  private static final long serialVersionUID = -98969238394857530L;
   @NotNull
-  @Column(name = "group_code", nullable = false, length = 50)
-  private String groupCode;
+  @Column(name = "multilingual_seq", nullable = false)
+  private Long multilingualSeq;
 
   @Size(max = 10)
   @NotNull
   @Column(name = "lang_cd", nullable = false, length = 10)
   private String langCd;
 
-  @Size(max = 50)
-  @NotNull
-  @Column(name = "code_value", nullable = false, length = 50)
-  private String codeValue;
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    TCommonCodeId entity = (TCommonCodeId) o;
-    return Objects.equals(this.langCd, entity.langCd) &&
-        Objects.equals(this.groupCode, entity.groupCode) &&
-        Objects.equals(this.codeValue, entity.codeValue);
+    TMultilingualValueId entity = (TMultilingualValueId) o;
+    return Objects.equals(this.multilingualSeq, entity.multilingualSeq) &&
+        Objects.equals(this.langCd, entity.langCd);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(langCd, groupCode, codeValue);
+    return Objects.hash(multilingualSeq, langCd);
   }
 
 }

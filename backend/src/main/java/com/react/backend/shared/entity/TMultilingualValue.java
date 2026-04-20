@@ -5,43 +5,33 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "t_common_code")
+@Table(name = "t_multilingual_value")
 @AttributeOverrides({
     @AttributeOverride(name = "createdAt", column = @Column(name = "created_at", nullable = false)),
     @AttributeOverride(name = "createdBy", column = @Column(name = "created_by", nullable = false)),
     @AttributeOverride(name = "updatedAt", column = @Column(name = "updated_at", nullable = false)),
     @AttributeOverride(name = "updatedBy", column = @Column(name = "updated_by", nullable = false))
 })
-public class TCommonCode extends BaseEntity {
+public class TMultilingualValue extends BaseEntity {
+  @SequenceGenerator(name = "t_multilingual_value_id_gen", sequenceName = "seq_multilingual", allocationSize = 1)
   @EmbeddedId
-  private TCommonCodeId id;
-
-  @MapsId("groupCode")
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "group_code", nullable = false)
-  private com.react.backend.shared.entity.TCommonCodeGroup groupCode;
+  private TMultilingualValueId id;
 
   @MapsId("langCd")
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @OnDelete(action = OnDeleteAction.RESTRICT)
   @JoinColumn(name = "lang_cd", nullable = false)
   private TLangBase langCd;
 
-  @Size(max = 500)
-  @Column(name = "code_desc", length = 500)
-  private String codeDesc;
-
+  @Size(max = 2000)
   @NotNull
-  @Column(name = "sort_ord", nullable = false)
-  private Integer sortOrd;
-
-  @NotNull
-  @ColumnDefault("'Y'")
-  @Column(name = "use_yn", nullable = false, length = Integer.MAX_VALUE)
-  private String useYn;
+  @Column(name = "multilingual_val", nullable = false, length = 2000)
+  private String multilingualVal;
 
 }

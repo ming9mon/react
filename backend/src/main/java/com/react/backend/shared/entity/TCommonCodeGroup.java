@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -31,5 +34,8 @@ public class TCommonCodeGroup extends BaseEntity {
   @ColumnDefault("'Y'")
   @Column(name = "use_yn", nullable = false, length = Integer.MAX_VALUE)
   private String useYn;
+
+  @OneToMany(mappedBy = "groupCode")
+  private Set<TCommonCode> tCommonCodes = new LinkedHashSet<>();
 
 }

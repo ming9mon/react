@@ -86,10 +86,15 @@ export const useApiClient = <T = any>() => {
         return await apiClient.post(getApiUrl(apiConfig), apiConfig?.body);
     }
 
+    const del = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
+        const apiConfig = getApiConfig(param);
+        return await apiClient.del(getApiUrl(apiConfig));
+    }
+
     const download = async (param?: ApiConfig | any): Promise<AxiosResponse<Blob>> => {
         const apiConfig = getApiConfig(param);
         return await apiClient.download(getApiUrl(apiConfig), apiConfig?.body);
     }
 
-    return { search, save, post, download };
+    return { search, save, post, del, download };
 }

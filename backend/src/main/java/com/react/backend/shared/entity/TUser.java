@@ -6,12 +6,15 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
 @Table(name = "t_user", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_t_user_01", columnNames = {"user_id"}),
-    @UniqueConstraint(name = "uk_t_user_02", columnNames = {"email"})
+    @UniqueConstraint(name = "uk_t_user_id", columnNames = {"user_id"}),
+    @UniqueConstraint(name = "uk_t_user_email", columnNames = {"email"})
 })
 @AttributeOverrides({
     @AttributeOverride(name = "createdAt", column = @Column(name = "created_at", nullable = false)),
@@ -46,9 +49,9 @@ public class TUser extends BaseEntity {
   @Column(name = "nickname", nullable = false, length = 50)
   private String nickname;
 
-  @Size(max = 1)
+  @Size(max = 2)
   @NotNull
-  @Column(name = "provider_type_cd", nullable = false, length = 1)
+  @Column(name = "provider_type_cd", nullable = false, length = 2)
   private String providerTypeCd;
 
   @Size(max = 100)
@@ -61,6 +64,11 @@ public class TUser extends BaseEntity {
   @Column(name = "sex", nullable = false, length = 1)
   private String sex;
 
+  @Size(max = 10)
+  @NotNull
+  @Column(name = "lang_cd", nullable = false, length = 10)
+  private String langCd;
+
   @Size(max = 255)
   @Column(name = "profile_img_url")
   private String profileImgUrl;
@@ -68,5 +76,8 @@ public class TUser extends BaseEntity {
   @Size(max = 500)
   @Column(name = "refresh_token", length = 500)
   private String refreshToken;
+
+  @OneToMany(mappedBy = "userSeq")
+  private Set<TLoginHistory> tLoginHistories = new LinkedHashSet<>();
 
 }

@@ -13,7 +13,10 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "t_login_history")
-public class TLoginHistory {
+@AttributeOverrides({
+    @AttributeOverride(name = "createdAt", column = @Column(name = "created_at", nullable = false))
+})
+public class TLoginHistory extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "t_login_history_id_gen")
   @SequenceGenerator(name = "t_login_history_id_gen", sequenceName = "seq_login_hist", allocationSize = 1)
@@ -30,9 +33,9 @@ public class TLoginHistory {
   @Column(name = "login_date", nullable = false)
   private Instant loginDate;
 
-  @Size(max = 20)
+  @Size(max = 2)
   @NotNull
-  @Column(name = "login_result_cd", nullable = false, length = 20)
+  @Column(name = "login_result_cd", nullable = false, length = 2)
   private String loginResultCd;
 
   @Size(max = 500)
