@@ -10,7 +10,7 @@ import { useUiStore } from "@/shared/store/uiStore";
 import { useUserStore } from "@/shared/store/userStore";
 import { useState, useRef, useEffect } from "react";
 
-const AUTH_PATHS = ["/login", "/signup"];
+const AUTH_PATHS = ["/login"];
 
 export default function Header() {
   const pathname = usePathname();
@@ -31,7 +31,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="flex items-center justify-between p-4">
+    <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 shadow-sm shrink-0">
       <div className="flex items-center gap-2">
         {!isAuthPage && <SideMenu />}
         <div className="flex items-center cursor-pointer" onClick={() => location.href = "/"}>

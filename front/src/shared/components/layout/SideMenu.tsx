@@ -5,13 +5,12 @@ import {
 	AccordionTrigger,
 	AccordionContent,
 } from "@/components/ui/accordion";
-import {Home, Settings, Menu} from "lucide-react";
-import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
+import { Home, Settings, Menu, Languages } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function SideMenu() {
 	return (
 		<Sheet>
-			{/* 햄버거 트리거 */}
 			<SheetTrigger asChild>
 				<button
 					className="p-2 hover:bg-gray-100 rounded-md"
@@ -21,55 +20,30 @@ export default function SideMenu() {
 				</button>
 			</SheetTrigger>
 
-			{/* 슬라이드 메뉴 */}
-			<SheetContent side="left" className="w-74 pt-12">
+			<SheetContent side="left" className="w-64 pt-12">
+				<nav className="flex flex-col space-y-1 px-4">
 
-				<nav className="flex flex-col space-y-2 px-4">
 					{/* 홈 */}
-					<Link
-						href="/"
-						className="flex items-center px-3 py-2 mb-4 hover:bg-gray-100 rounded"
-					>
-						<Home className="mr-2" /> 홈
+					<Link href="/" className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded text-sm">
+						<Home size={16} /> 홈
 					</Link>
 
-					{/* 2deps */}
+					{/* 관리자 */}
 					<Accordion type="single" collapsible>
-						<AccordionItem value="dashboard">
-							<AccordionTrigger className="flex items-center justify-between px-3 py-2 hover:bg-gray-100 rounded">
-								<span>2deps</span>
+						<AccordionItem value="admin" className="border-none">
+							<AccordionTrigger className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded text-sm">
+								<div className="flex items-center gap-2">
+									<Settings size={16} /> 관리자
+								</div>
 							</AccordionTrigger>
-							<AccordionContent className="flex flex-col ml-6 space-y-1 mt-2">
-								<Link
-									href="/dashboard/overview"
-									className="px-2 py-1 hover:bg-gray-100 rounded text-sm"
-								>
-									1
-								</Link>
-								<Link
-									href="/dashboard/stats"
-									className="px-2 py-1 hover:bg-gray-100 rounded text-sm"
-								>
-									2
-								</Link>
-								<Link
-									href="/dashboard/realtime"
-									className="px-2 py-1 hover:bg-gray-100 rounded text-sm"
-								>
-									3
+							<AccordionContent className="flex flex-col ml-6 space-y-1 mt-1">
+								<Link href="/admin/multilingual" className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded text-sm">
+									<Languages size={14} /> 다국어 관리
 								</Link>
 							</AccordionContent>
 						</AccordionItem>
 					</Accordion>
 
-					{/* 1단계: 설정 */}
-					{/* 홈 */}
-					<Link
-						href="/"
-						className="flex items-center px-3 py-2 mb-4 hover:bg-gray-100 rounded"
-					>
-						<Settings className="mr-2" />설정
-					</Link>
 				</nav>
 			</SheetContent>
 		</Sheet>

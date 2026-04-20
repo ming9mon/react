@@ -13,7 +13,7 @@ export default function RootLayout({
       <body className="flex flex-col h-screen">
         <CommonDialogProvider>
           <Header />
-          <main className="flex-1 flex items-center justify-center p-6 md:p-10">
+          <main className="flex-1 overflow-hidden min-w-0 flex flex-col">
             {children}
           </main>
           <LoginModal />
