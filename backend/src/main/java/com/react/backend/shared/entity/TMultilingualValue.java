@@ -23,6 +23,11 @@ public class TMultilingualValue extends BaseEntity {
   @EmbeddedId
   private TMultilingualValueId id;
 
+  @MapsId("multilingualSeq")
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "multilingual_seq", nullable = false)
+  private TMultilingualBase multilingualBase;
+
   @MapsId("langCd")
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @OnDelete(action = OnDeleteAction.RESTRICT)
