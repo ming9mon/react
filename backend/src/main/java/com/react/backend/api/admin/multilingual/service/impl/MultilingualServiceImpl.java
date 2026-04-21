@@ -1,9 +1,9 @@
 package com.react.backend.api.admin.multilingual.service.impl;
 
-import com.react.backend.api.admin.multilingual.dto.MultilingualDtlResponseDto;
-import com.react.backend.api.admin.multilingual.dto.MultilingualListResponseDto;
-import com.react.backend.api.admin.multilingual.dto.MultilingualRequestDto;
-import com.react.backend.api.admin.multilingual.dto.MultilingualSaveRequestDto;
+import com.react.backend.api.admin.multilingual.dto.SaveMultilingualRequestDto;
+import com.react.backend.api.admin.multilingual.dto.SelectMultilingualDtlResponseDto;
+import com.react.backend.api.admin.multilingual.dto.SelectMultilingualListResponseDto;
+import com.react.backend.api.admin.multilingual.dto.SelectMultilingualRequestDto;
 import com.react.backend.api.admin.multilingual.service.MultilingualService;
 import com.react.backend.shared.entity.TLangBase;
 import com.react.backend.shared.entity.TMultilingualBase;
@@ -37,28 +37,28 @@ public class MultilingualServiceImpl implements MultilingualService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<MultilingualListResponseDto> getList(MultilingualRequestDto requestDto) {
+  public Page<SelectMultilingualListResponseDto> getList(SelectMultilingualRequestDto requestDto) {
     String key   = StringUtils.hasText(requestDto.getMultilingualKey())  ? requestDto.getMultilingualKey()  : null;
     String type  = StringUtils.hasText(requestDto.getMultilingualType()) ? requestDto.getMultilingualType() : null;
     String useYn = StringUtils.hasText(requestDto.getUseYn())            ? requestDto.getUseYn()            : null;
 
     return multilingualBaseRepository
         .findByCondition(key, type, useYn, PageRequest.of(requestDto.getPage(), requestDto.getPageSize()))
-        .map(MultilingualListResponseDto::new);
+        .map(SelectMultilingualListResponseDto::new);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public MultilingualDtlResponseDto getDetail(String multilingualKey) {
+  public SelectMultilingualDtlResponseDto getDetail(String multilingualKey) {
     TMultilingualBase base = multilingualBaseRepository.findById(multilingualKey)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 다국어 키입니다: " + multilingualKey));
     List<TMultilingualValue> values = multilingualValueRepository.findAllByMultilingualKey(multilingualKey);
-    return new MultilingualDtlResponseDto(base, values);
+    return new SelectMultilingualDtlResponseDto(base, values);
   }
 
   @Override
   @Transactional
-  public void saveOrUpdate(MultilingualSaveRequestDto requestDto) {
+  public void saveOrUpdate(SaveMultilingualRequestDto requestDto) {
     String key = requestDto.getMultilingualKey();
     TMultilingualBase base = multilingualBaseRepository.findById(key).orElseGet(TMultilingualBase::new);
     base.setMultilingualKey(key);

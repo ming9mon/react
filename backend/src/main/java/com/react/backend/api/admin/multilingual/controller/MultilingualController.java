@@ -1,9 +1,9 @@
 package com.react.backend.api.admin.multilingual.controller;
 
-import com.react.backend.api.admin.multilingual.dto.MultilingualDtlResponseDto;
-import com.react.backend.api.admin.multilingual.dto.MultilingualListResponseDto;
-import com.react.backend.api.admin.multilingual.dto.MultilingualRequestDto;
-import com.react.backend.api.admin.multilingual.dto.MultilingualSaveRequestDto;
+import com.react.backend.api.admin.multilingual.dto.SaveMultilingualRequestDto;
+import com.react.backend.api.admin.multilingual.dto.SelectMultilingualDtlResponseDto;
+import com.react.backend.api.admin.multilingual.dto.SelectMultilingualListResponseDto;
+import com.react.backend.api.admin.multilingual.dto.SelectMultilingualRequestDto;
 import com.react.backend.api.admin.multilingual.service.MultilingualService;
 import com.react.backend.shared.entity.TLangBase;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +26,17 @@ public class MultilingualController {
   }
 
   @GetMapping
-  public Page<MultilingualListResponseDto> getList(MultilingualRequestDto requestDto) {
+  public Page<SelectMultilingualListResponseDto> getList(SelectMultilingualRequestDto requestDto) {
     return multilingualService.getList(requestDto);
   }
 
   @GetMapping("/{multilingualKey}")
-  public MultilingualDtlResponseDto getDetail(@PathVariable String multilingualKey) {
+  public SelectMultilingualDtlResponseDto getDetail(@PathVariable String multilingualKey) {
     return multilingualService.getDetail(multilingualKey);
   }
 
   @PostMapping
-  public void saveOrUpdate(@Validated @RequestBody MultilingualSaveRequestDto requestDto) {
+  public void saveOrUpdate(@Validated @RequestBody SaveMultilingualRequestDto requestDto) {
     multilingualService.saveOrUpdate(requestDto);
   }
 

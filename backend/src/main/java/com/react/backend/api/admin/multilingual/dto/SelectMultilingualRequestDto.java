@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MultilingualRequestDto {
+public class SelectMultilingualRequestDto {
   private String multilingualKey;
   private String multilingualType;
   private String useYn;

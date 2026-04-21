@@ -8,20 +8,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class MultilingualDtlResponseDto {
+public class SelectMultilingualDtlResponseDto {
   private final String multilingualKey;
   private final String multilingualType;
   private final String useYn;
   private final String multilingualDesc;
-  private final List<MultilingualValueDto> values;
+  private final List<SelectMultilingualValueDto> values;
 
-  public MultilingualDtlResponseDto(TMultilingualBase base, List<TMultilingualValue> valueList) {
+  public SelectMultilingualDtlResponseDto(TMultilingualBase base, List<TMultilingualValue> valueList) {
     this.multilingualKey = base.getMultilingualKey();
     this.multilingualType = base.getMultilingualType();
     this.useYn = base.getUseYn();
     this.multilingualDesc = base.getMultilingualDesc();
     this.values = valueList.stream().map(v -> {
-      MultilingualValueDto dto = new MultilingualValueDto();
+      SelectMultilingualValueDto dto = new SelectMultilingualValueDto();
       dto.setLangCd(v.getId().getLangCd());
       dto.setLangNm(v.getLangCd().getLangNm());
       dto.setMultilingualVal(v.getMultilingualVal());

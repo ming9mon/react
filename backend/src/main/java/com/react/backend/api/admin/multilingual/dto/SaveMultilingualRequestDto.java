@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MultilingualSaveRequestDto {
+public class SaveMultilingualRequestDto {
   @NotBlank
   @Size(max = 6)
   private String multilingualKey;
@@ -26,5 +26,5 @@ public class MultilingualSaveRequestDto {
   private String multilingualDesc;
 
   @NotEmpty
-  private List<MultilingualValueDto> values;
+  private List<SaveMultilingualValueDto> values;
 }

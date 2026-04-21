@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MultilingualValueDto {
+public class SaveMultilingualValueDto {
   private String langCd;
-  private String langNm;
   private String multilingualVal;
 }

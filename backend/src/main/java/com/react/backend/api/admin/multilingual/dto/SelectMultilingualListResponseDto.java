@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class MultilingualListResponseDto {
+public class SelectMultilingualListResponseDto {
   private final String multilingualKey;
   private final String multilingualType;
   private final String useYn;
@@ -14,7 +14,7 @@ public class MultilingualListResponseDto {
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
-  public MultilingualListResponseDto(TMultilingualBase entity) {
+  public SelectMultilingualListResponseDto(TMultilingualBase entity) {
     this.multilingualKey = entity.getMultilingualKey();
     this.multilingualType = entity.getMultilingualType();
     this.useYn = entity.getUseYn();
