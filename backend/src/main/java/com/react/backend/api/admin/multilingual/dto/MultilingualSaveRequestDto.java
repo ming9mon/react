@@ -1,4 +1,4 @@
-package com.react.backend.react.multilingual.dto;
+package com.react.backend.api.admin.multilingual.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

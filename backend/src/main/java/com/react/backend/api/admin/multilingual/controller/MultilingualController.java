@@ -1,10 +1,10 @@
-package com.react.backend.react.multilingual.controller;
+package com.react.backend.api.admin.multilingual.controller;
 
-import com.react.backend.react.multilingual.dto.MultilingualDtlResponseDto;
-import com.react.backend.react.multilingual.dto.MultilingualListRequestDto;
-import com.react.backend.react.multilingual.dto.MultilingualListResponseDto;
-import com.react.backend.react.multilingual.dto.MultilingualSaveRequestDto;
-import com.react.backend.react.multilingual.service.MultilingualService;
+import com.react.backend.api.admin.multilingual.dto.MultilingualDtlResponseDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualListRequestDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualListResponseDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualSaveRequestDto;
+import com.react.backend.api.admin.multilingual.service.MultilingualService;
 import com.react.backend.shared.entity.TLangBase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,14 +36,8 @@ public class MultilingualController {
   }
 
   @PostMapping
-  public void save(@Validated @RequestBody MultilingualSaveRequestDto requestDto) {
-    multilingualService.save(requestDto);
-  }
-
-  @PutMapping("/{multilingualKey}")
-  public void update(@PathVariable String multilingualKey,
-                     @Validated @RequestBody MultilingualSaveRequestDto requestDto) {
-    multilingualService.update(multilingualKey, requestDto);
+  public void saveOrUpdate(@Validated @RequestBody MultilingualSaveRequestDto requestDto) {
+    multilingualService.saveOrUpdate(requestDto);
   }
 
   @DeleteMapping("/{multilingualKey}")

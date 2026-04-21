@@ -1,10 +1,10 @@
-package com.react.backend.react.multilingual.service.impl;
+package com.react.backend.api.admin.multilingual.service.impl;
 
-import com.react.backend.react.multilingual.dto.MultilingualDtlResponseDto;
-import com.react.backend.react.multilingual.dto.MultilingualListRequestDto;
-import com.react.backend.react.multilingual.dto.MultilingualListResponseDto;
-import com.react.backend.react.multilingual.dto.MultilingualSaveRequestDto;
-import com.react.backend.react.multilingual.service.MultilingualService;
+import com.react.backend.api.admin.multilingual.dto.MultilingualDtlResponseDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualListRequestDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualListResponseDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualSaveRequestDto;
+import com.react.backend.api.admin.multilingual.service.MultilingualService;
 import com.react.backend.shared.entity.TLangBase;
 import com.react.backend.shared.entity.TMultilingualBase;
 import com.react.backend.shared.entity.TMultilingualValue;
@@ -52,34 +52,19 @@ public class MultilingualServiceImpl implements MultilingualService {
 
   @Override
   @Transactional
-  public void save(MultilingualSaveRequestDto requestDto) {
-    if (multilingualBaseRepository.existsById(requestDto.getMultilingualKey())) {
-      throw new IllegalArgumentException("이미 존재하는 다국어 키입니다: " + requestDto.getMultilingualKey());
-    }
+  public void saveOrUpdate(MultilingualSaveRequestDto requestDto) {
+    String key = requestDto.getMultilingualKey();
+    TMultilingualBase base = multilingualBaseRepository.findById(key)
+        .orElseGet(TMultilingualBase::new);
 
-    TMultilingualBase base = new TMultilingualBase();
-    base.setMultilingualKey(requestDto.getMultilingualKey());
+    base.setMultilingualKey(key);
     base.setMultilingualType(requestDto.getMultilingualType());
     base.setUseYn(requestDto.getUseYn());
     base.setMultilingualDesc(requestDto.getMultilingualDesc());
     multilingualBaseRepository.save(base);
 
-    saveValues(requestDto.getMultilingualKey(), requestDto);
-  }
-
-  @Override
-  @Transactional
-  public void update(String multilingualKey, MultilingualSaveRequestDto requestDto) {
-    TMultilingualBase base = multilingualBaseRepository.findById(multilingualKey)
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 다국어 키입니다: " + multilingualKey));
-
-    base.setMultilingualType(requestDto.getMultilingualType());
-    base.setUseYn(requestDto.getUseYn());
-    base.setMultilingualDesc(requestDto.getMultilingualDesc());
-    multilingualBaseRepository.save(base);
-
-    multilingualValueRepository.deleteAllByMultilingualKey(multilingualKey);
-    saveValues(multilingualKey, requestDto);
+    multilingualValueRepository.deleteAllByMultilingualKey(key);
+    saveValues(key, requestDto);
   }
 
   @Override
