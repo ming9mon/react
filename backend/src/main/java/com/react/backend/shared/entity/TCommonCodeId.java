@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Comment;
 
 import java.util.Objects;
 
@@ -15,18 +16,21 @@ import java.util.Objects;
 @Embeddable
 public class TCommonCodeId implements java.io.Serializable {
   private static final long serialVersionUID = 778232799167617987L;
-  @Size(max = 50)
+  @Size(max = 255)
   @NotNull
-  @Column(name = "group_code", nullable = false, length = 50)
+  @Comment("코드 그룹 코드")
+  @Column(name = "group_code", nullable = false)
   private String groupCode;
 
-  @Size(max = 10)
+  @Size(max = 255)
   @NotNull
-  @Column(name = "lang_cd", nullable = false, length = 10)
+  @Comment("언어 코드")
+  @Column(name = "lang_cd", nullable = false)
   private String langCd;
 
   @Size(max = 50)
   @NotNull
+  @Comment("코드 값")
   @Column(name = "code_value", nullable = false, length = 50)
   private String codeValue;
 

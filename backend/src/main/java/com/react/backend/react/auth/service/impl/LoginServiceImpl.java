@@ -210,7 +210,7 @@ public class LoginServiceImpl implements LoginService {
     private void saveLoginHistory(TUser user, Character resultCd, String resultMsg,
                                   String providerTypeCd, HttpServletRequest request) {
         TLoginHistory history = new TLoginHistory();
-        history.setUserSeq(user);
+        history.setUserSeq(user.getId());
         history.setLoginDate(Instant.now());
         history.setLoginResultCd(String.valueOf(resultCd));
         history.setLoginResultMsg(resultMsg);

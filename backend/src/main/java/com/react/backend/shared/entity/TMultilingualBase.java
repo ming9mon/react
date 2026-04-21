@@ -6,16 +6,13 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.hibernate.annotations.Comment;
 
 @Getter
 @Setter
+@Comment("다국어 베이스 테이블")
 @Entity
-@Table(name = "t_multilingual_base", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_t_multilingual_base_01", columnNames = {"multilingual_cd"})
-})
+@Table(name = "t_multilingual_base")
 @AttributeOverrides({
     @AttributeOverride(name = "createdAt", column = @Column(name = "created_at", nullable = false)),
     @AttributeOverride(name = "createdBy", column = @Column(name = "created_by", nullable = false)),
@@ -24,31 +21,26 @@ import java.util.Set;
 })
 public class TMultilingualBase extends BaseEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "t_multilingual_base_id_gen")
-  @SequenceGenerator(name = "t_multilingual_base_id_gen", sequenceName = "seq_multilingual", allocationSize = 1)
-  @Column(name = "multilingual_seq", nullable = false)
-  private Long id;
-
   @Size(max = 6)
-  @NotNull
-  @Column(name = "multilingual_cd", nullable = false, length = 6)
-  private String multilingualCd;
+  @Comment("다국어 key")
+  @Column(name = "multilingual_key", nullable = false, length = 6)
+  private String multilingualKey;
 
-  @Size(max = 20)
+  @Size(max = 2)
   @NotNull
-  @Column(name = "multilingual_type_cd", nullable = false, length = 20)
-  private String multilingualTypeCd;
+  @Comment("다국어 유형 (S: SCREEN/ W : WORD/ M: MESSAGE / E: ERROR)")
+  @Column(name = "multilingual_type", nullable = false, length = 2)
+  private String multilingualType;
 
   @NotNull
+  @Comment("사용 여부 (Y/N)")
   @ColumnDefault("'Y'")
   @Column(name = "use_yn", nullable = false, length = Integer.MAX_VALUE)
   private String useYn;
 
   @Size(max = 500)
+  @Comment("다국어 설명")
   @Column(name = "multilingual_desc", length = 500)
   private String multilingualDesc;
-
-  @OneToMany(mappedBy = "multilingualBase")
-  private Set<TMultilingualValue> tMultilingualValues = new LinkedHashSet<>();
 
 }

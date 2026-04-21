@@ -6,14 +6,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.hibernate.annotations.Comment;
 
 @Getter
 @Setter
+@Comment("메뉴 정보 테이블")
 @Entity
 @Table(name = "t_menu")
 @AttributeOverrides({
@@ -25,35 +22,36 @@ import java.util.Set;
 public class TMenu extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "t_menu_id_gen")
-  @SequenceGenerator(name = "t_menu_id_gen", sequenceName = "seq_menu", allocationSize = 1)
+  @SequenceGenerator(name = "t_menu_id_gen", sequenceName = "seq_login_hist", allocationSize = 1)
+  @Comment("메뉴 ID (PK)")
   @Column(name = "menu_id", nullable = false)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @OnDelete(action = OnDeleteAction.RESTRICT)
-  @JoinColumn(name = "parent_menu_id")
-  private TMenu parentMenu;
+  @Comment("부모 메뉴 ID")
+  @Column(name = "parent_menu_id")
+  private Long parentMenuId;
 
   @Size(max = 6)
   @NotNull
+  @Comment("메뉴 다국어 코드")
   @Column(name = "menu_multilingual_cd", nullable = false, length = 6)
   private String menuMultilingualCd;
 
   @Size(max = 200)
   @NotNull
+  @Comment("메뉴 경로")
   @Column(name = "menu_path", nullable = false, length = 200)
   private String menuPath;
 
   @NotNull
+  @Comment("사용 여부 (Y/N)")
   @ColumnDefault("'Y'")
   @Column(name = "use_yn", nullable = false, length = Integer.MAX_VALUE)
   private String useYn;
 
   @NotNull
+  @Comment("정렬 순서")
   @Column(name = "sort_ord", nullable = false)
   private Integer sortOrd;
-
-  @OneToMany(mappedBy = "parentMenu")
-  private Set<TMenu> tMenus = new LinkedHashSet<>();
 
 }

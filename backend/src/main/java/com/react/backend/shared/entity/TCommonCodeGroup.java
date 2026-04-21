@@ -6,12 +6,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.hibernate.annotations.Comment;
 
 @Getter
 @Setter
+@Comment("공통코드 그룹 테이블")
 @Entity
 @Table(name = "t_common_code_group")
 @AttributeOverrides({
@@ -23,19 +22,20 @@ import java.util.Set;
 public class TCommonCodeGroup extends BaseEntity {
   @Id
   @Size(max = 50)
+  @SequenceGenerator(name = "t_common_code_group_id_gen", sequenceName = "seq_login_hist", allocationSize = 1)
+  @Comment("코드 그룹 코드")
   @Column(name = "group_code", nullable = false, length = 50)
   private String groupCode;
 
   @Size(max = 500)
+  @Comment("코드 그룹 설명")
   @Column(name = "group_desc", length = 500)
   private String groupDesc;
 
   @NotNull
+  @Comment("사용 여부 Y/N")
   @ColumnDefault("'Y'")
   @Column(name = "use_yn", nullable = false, length = Integer.MAX_VALUE)
   private String useYn;
-
-  @OneToMany(mappedBy = "groupCode")
-  private Set<TCommonCode> tCommonCodes = new LinkedHashSet<>();
 
 }
