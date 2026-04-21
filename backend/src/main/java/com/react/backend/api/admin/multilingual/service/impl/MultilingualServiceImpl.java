@@ -3,8 +3,8 @@ package com.react.backend.api.admin.multilingual.service.impl;
 import com.react.backend.api.admin.multilingual.dto.MultilingualDtlResponseDto;
 import com.react.backend.api.admin.multilingual.dto.MultilingualListResponseDto;
 import com.react.backend.api.admin.multilingual.dto.MultilingualRequestDto;
+import com.react.backend.api.admin.multilingual.dto.MultilingualSaveRequestDto;
 import com.react.backend.api.admin.multilingual.service.MultilingualService;
-import com.react.backend.shared.dto.ResponseDto;
 import com.react.backend.shared.entity.TLangBase;
 import com.react.backend.shared.entity.TMultilingualBase;
 import com.react.backend.shared.entity.TMultilingualValue;
@@ -30,53 +30,45 @@ public class MultilingualServiceImpl implements MultilingualService {
   private final LangBaseRepository langBaseRepository;
 
   @Override
-  @Transactional
-  public ResponseDto handle(MultilingualRequestDto dto) {
-    return switch (dto.getMode()) {
-      case "LIST"      -> getList(dto);
-      case "LANG_LIST" -> getLangList();
-      case "DETAIL"    -> getDetail(dto.getMultilingualKey());
-      case "SAVE"      -> { saveOrUpdate(dto); yield ResponseDto.builder().code("S000").message("처리되었습니다.").build(); }
-      case "DELETE"    -> { delete(dto.getMultilingualKey()); yield ResponseDto.builder().code("S000").message("삭제되었습니다.").build(); }
-      default          -> throw new IllegalArgumentException("지원하지 않는 mode입니다: " + dto.getMode());
-    };
+  @Transactional(readOnly = true)
+  public List<TLangBase> getLangList() {
+    return langBaseRepository.findAll();
   }
 
-  private ResponseDto getList(MultilingualRequestDto dto) {
-    String key  = StringUtils.hasText(dto.getMultilingualKey())   ? dto.getMultilingualKey()   : null;
-    String type = StringUtils.hasText(dto.getMultilingualType())  ? dto.getMultilingualType()  : null;
-    String useYn = StringUtils.hasText(dto.getUseYn())            ? dto.getUseYn()             : null;
+  @Override
+  @Transactional(readOnly = true)
+  public Page<MultilingualListResponseDto> getList(MultilingualRequestDto requestDto) {
+    String key   = StringUtils.hasText(requestDto.getMultilingualKey())  ? requestDto.getMultilingualKey()  : null;
+    String type  = StringUtils.hasText(requestDto.getMultilingualType()) ? requestDto.getMultilingualType() : null;
+    String useYn = StringUtils.hasText(requestDto.getUseYn())            ? requestDto.getUseYn()            : null;
 
-    Page<MultilingualListResponseDto> result = multilingualBaseRepository
-        .findByCondition(key, type, useYn, PageRequest.of(dto.getPage(), dto.getPageSize()))
+    return multilingualBaseRepository
+        .findByCondition(key, type, useYn, PageRequest.of(requestDto.getPage(), requestDto.getPageSize()))
         .map(MultilingualListResponseDto::new);
-
-    return ResponseDto.builder().code("S000").body(result).build();
   }
 
-  private ResponseDto getLangList() {
-    List<TLangBase> list = langBaseRepository.findAll();
-    return ResponseDto.builder().code("S000").body(list).build();
-  }
-
-  private ResponseDto getDetail(String multilingualKey) {
+  @Override
+  @Transactional(readOnly = true)
+  public MultilingualDtlResponseDto getDetail(String multilingualKey) {
     TMultilingualBase base = multilingualBaseRepository.findById(multilingualKey)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 다국어 키입니다: " + multilingualKey));
     List<TMultilingualValue> values = multilingualValueRepository.findAllByMultilingualKey(multilingualKey);
-    return ResponseDto.builder().code("S000").body(new MultilingualDtlResponseDto(base, values)).build();
+    return new MultilingualDtlResponseDto(base, values);
   }
 
-  private void saveOrUpdate(MultilingualRequestDto dto) {
-    String key = dto.getMultilingualKey();
+  @Override
+  @Transactional
+  public void saveOrUpdate(MultilingualSaveRequestDto requestDto) {
+    String key = requestDto.getMultilingualKey();
     TMultilingualBase base = multilingualBaseRepository.findById(key).orElseGet(TMultilingualBase::new);
     base.setMultilingualKey(key);
-    base.setMultilingualType(dto.getMultilingualType());
-    base.setUseYn(dto.getUseYn());
-    base.setMultilingualDesc(dto.getMultilingualDesc());
+    base.setMultilingualType(requestDto.getMultilingualType());
+    base.setUseYn(requestDto.getUseYn());
+    base.setMultilingualDesc(requestDto.getMultilingualDesc());
     multilingualBaseRepository.save(base);
 
     multilingualValueRepository.deleteAllByMultilingualKey(key);
-    dto.getValues().forEach(valueDto -> {
+    requestDto.getValues().forEach(valueDto -> {
       TLangBase langBase = langBaseRepository.findById(valueDto.getLangCd())
           .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 언어 코드입니다: " + valueDto.getLangCd()));
 
@@ -93,7 +85,9 @@ public class MultilingualServiceImpl implements MultilingualService {
     });
   }
 
-  private void delete(String multilingualKey) {
+  @Override
+  @Transactional
+  public void delete(String multilingualKey) {
     if (!multilingualBaseRepository.existsById(multilingualKey)) {
       throw new IllegalArgumentException("존재하지 않는 다국어 키입니다: " + multilingualKey);
     }
