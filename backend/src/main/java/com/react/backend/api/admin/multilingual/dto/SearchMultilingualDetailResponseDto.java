@@ -7,21 +7,27 @@ import lombok.Getter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** 다국어 상세 조회 응답 DTO */
 @Getter
-public class SelectMultilingualDtlResponseDto {
+public class SearchMultilingualDetailResponseDto {
+  /** 다국어 키 */
   private final String multilingualKey;
+  /** 다국어 유형 (S: SCREEN / W: WORD / M: MESSAGE / E: ERROR) */
   private final String multilingualType;
+  /** 사용 여부 (Y / N) */
   private final String useYn;
+  /** 다국어 설명 */
   private final String multilingualDesc;
-  private final List<SelectMultilingualValueDto> values;
+  /** 언어별 번역 값 목록 */
+  private final List<SearchMultilingualValueDto> values;
 
-  public SelectMultilingualDtlResponseDto(TMultilingualBase base, List<TMultilingualValue> valueList) {
+  public SearchMultilingualDetailResponseDto(TMultilingualBase base, List<TMultilingualValue> valueList) {
     this.multilingualKey = base.getMultilingualKey();
     this.multilingualType = base.getMultilingualType();
     this.useYn = base.getUseYn();
     this.multilingualDesc = base.getMultilingualDesc();
     this.values = valueList.stream().map(v -> {
-      SelectMultilingualValueDto dto = new SelectMultilingualValueDto();
+      SearchMultilingualValueDto dto = new SearchMultilingualValueDto();
       dto.setLangCd(v.getId().getLangCd());
       dto.setLangNm(v.getLangCd().getLangNm());
       dto.setMultilingualVal(v.getMultilingualVal());
