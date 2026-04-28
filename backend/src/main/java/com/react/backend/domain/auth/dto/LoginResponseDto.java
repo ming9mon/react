@@ -1,4 +1,4 @@
-package com.react.backend.api.auth.dto;
+package com.react.backend.domain.auth.dto;
 
 import com.react.backend.shared.dto.TokenInfoDto;
 import com.react.backend.shared.dto.UserInfoDto;

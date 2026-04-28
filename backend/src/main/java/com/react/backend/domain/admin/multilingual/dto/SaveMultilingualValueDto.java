@@ -1,4 +1,4 @@
-package com.react.backend.api.admin.multilingual.dto;
+package com.react.backend.domain.admin.multilingual.dto;
 
 import lombok.Getter;
 import lombok.Setter;

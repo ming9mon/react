@@ -1,5 +1,6 @@
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios'
 import {mAlert} from "@/shared/helpers/commonDialog";
+import { useUiStore } from "@/shared/store/uiStore";
 
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
@@ -77,17 +78,18 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
 	// const { accessToken } = useUserStore.getState();
 	// if (accessToken) config.headers!['Authorization'] = `Bearer ${accessToken}`
+	useUiStore.getState().startLoading();
 	return config
 })
 
 api.interceptors.response.use(
-	(res) => res,
+	(res) => {
+		useUiStore.getState().stopLoading();
+		return res;
+	},
 	(error) => {
+		useUiStore.getState().stopLoading();
 		return handleError(error)
-		// if (error.response?.status === 401) {
-		// 	window.location.href = '/login'
-		// }
-		// return Promise.reject(error)
 	}
 )
 

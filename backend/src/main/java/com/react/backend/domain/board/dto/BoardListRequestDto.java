@@ -1,15 +1,13 @@
-package com.react.backend.api.board.dto;
+package com.react.backend.domain.board.dto;
 
+import com.react.backend.shared.dto.PagingBaseDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;
 
 @Getter
 @Setter
-public class BoardListRequestDto {
-    private int page = 0;
-    private int pageSize = 10;
-    private String sortBy;      // 정렬
+public class BoardListRequestDto extends PagingBaseDto {
+    private String sortBy;
     private Sort.Direction direction = Sort.Direction.DESC;
-
 }

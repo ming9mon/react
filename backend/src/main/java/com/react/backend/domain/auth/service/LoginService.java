@@ -1,6 +1,6 @@
-package com.react.backend.api.auth.service;
+package com.react.backend.domain.auth.service;
 
-import com.react.backend.api.auth.dto.*;
+import com.react.backend.domain.auth.dto.*;
 
 import java.util.Map;
 

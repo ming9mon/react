@@ -1,4 +1,11 @@
 package com.react.backend.shared.dto;
 
-public class PagingBaseDto {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class PagingBaseDto extends BaseDto {
+  private int pageNo = 0;
+  private int pageSize = 10;
 }

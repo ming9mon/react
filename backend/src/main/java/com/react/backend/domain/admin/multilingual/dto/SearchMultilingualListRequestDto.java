@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SearchMultilingualRequestDto extends PagingBaseDto {
+public class SearchMultilingualListRequestDto extends PagingBaseDto {
   @NotBlank
   private String langCd;           // 언어 코드 (필수)
   private String multilingualKey;  // 다국어 키

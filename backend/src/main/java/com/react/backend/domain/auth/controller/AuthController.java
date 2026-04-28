@@ -1,7 +1,7 @@
-package com.react.backend.api.auth.controller;
+package com.react.backend.domain.auth.controller;
 
-import com.react.backend.api.auth.dto.*;
-import com.react.backend.api.auth.service.LoginService;
+import com.react.backend.domain.auth.dto.*;
+import com.react.backend.domain.auth.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

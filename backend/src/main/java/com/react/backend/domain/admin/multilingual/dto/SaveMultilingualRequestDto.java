@@ -1,5 +1,6 @@
-package com.react.backend.api.admin.multilingual.dto;
+package com.react.backend.domain.admin.multilingual.dto;
 
+import com.react.backend.shared.dto.BaseDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SaveMultilingualRequestDto {
+public class SaveMultilingualRequestDto extends BaseDto {
   @NotBlank @Size(max = 6)
   private String multilingualKey;  // 다국어 키
 

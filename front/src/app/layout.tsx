@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import { CommonDialogProvider } from "@/components/common/CommonDialog";
 import LoginModal from "@/features/auth/login/components/LoginModal";
 import AppInitializer from "@/shared/components/AppInitializer";
+import LoadingBar from "@/shared/components/LoadingBar";
 
 export default function RootLayout({
   children,
@@ -13,6 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col h-screen">
         <CommonDialogProvider>
+          <LoadingBar />
           <AppInitializer />
           <Header />
           <main className="flex-1 overflow-hidden min-w-0 flex flex-col">

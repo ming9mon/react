@@ -1,8 +1,8 @@
-package com.react.backend.api.board.service;
+package com.react.backend.domain.board.service;
 
-import com.react.backend.api.board.dto.BoardDtlResponseDto;
-import com.react.backend.api.board.dto.BoardListRequestDto;
-import com.react.backend.api.board.dto.BoardListResponseDto;
+import com.react.backend.domain.board.dto.BoardDtlResponseDto;
+import com.react.backend.domain.board.dto.BoardListRequestDto;
+import com.react.backend.domain.board.dto.BoardListResponseDto;
 import org.springframework.data.domain.Page;
 
 public interface BoardService {

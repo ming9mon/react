@@ -31,6 +31,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.GET, "/init").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/*", "/logout").permitAll() // 허용 URL 패턴 설정
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요
                     //.anyRequest().permitAll()

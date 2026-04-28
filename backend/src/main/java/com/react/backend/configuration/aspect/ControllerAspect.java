@@ -21,7 +21,7 @@ public class ControllerAspect {
 
     private final JwtUtil jwtUtil;
 
-    @Before("execution(* com.react.backend.react..controller..*(..))")
+    @Before("execution(* com.react.backend.domain..controller..*(..))")
     public void beforeController(JoinPoint joinPoint) {
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
        HttpServletRequest request = Objects.requireNonNull(attributes).getRequest();
@@ -37,7 +37,7 @@ public class ControllerAspect {
                    userInfo = jwtUtil.getUserInfo(request);
                }
 
-               dto.setSessionId(userInfo.getUserId());
+               dto.setSessionUserSeq(userInfo.getUserSeq());
                dto.setAccessIp(accessIp);
            }
        }

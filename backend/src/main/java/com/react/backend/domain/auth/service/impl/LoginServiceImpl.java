@@ -1,13 +1,13 @@
-package com.react.backend.api.auth.service.impl;
+package com.react.backend.domain.auth.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.react.backend.configuration.exception.RestException;
-import com.react.backend.api.auth.dto.*;
+import com.react.backend.domain.auth.dto.*;
 import com.react.backend.shared.entity.TLoginHistory;
 import com.react.backend.shared.repository.LoginHistoryRepository;
 import com.react.backend.shared.repository.UserRepository;
-import com.react.backend.api.auth.service.LoginService;
+import com.react.backend.domain.auth.service.LoginService;
 import com.react.backend.shared.dto.FileSaveResultDto;
 import com.react.backend.shared.dto.TokenInfoDto;
 import com.react.backend.shared.dto.UserInfoDto;

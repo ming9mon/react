@@ -1,4 +1,4 @@
-package com.react.backend.api.board.dto;
+package com.react.backend.domain.board.dto;
 
 import lombok.Builder;
 import lombok.Getter;

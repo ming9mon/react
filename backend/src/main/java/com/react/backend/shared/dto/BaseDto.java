@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BaseDto {
-    private String sessionId;   // 사용자 아이디
-    private String accessIp;    // 접속 IP
+    private Long sessionUserSeq;    // 사용자 SEQ
+    private String accessIp;        // 접속 IP
 }

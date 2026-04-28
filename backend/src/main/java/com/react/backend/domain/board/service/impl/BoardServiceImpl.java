@@ -1,9 +1,9 @@
-package com.react.backend.api.board.service.impl;
+package com.react.backend.domain.board.service.impl;
 
-import com.react.backend.api.board.dto.BoardDtlResponseDto;
-import com.react.backend.api.board.dto.BoardListRequestDto;
-import com.react.backend.api.board.dto.BoardListResponseDto;
-import com.react.backend.api.board.service.BoardService;
+import com.react.backend.domain.board.dto.BoardDtlResponseDto;
+import com.react.backend.domain.board.dto.BoardListRequestDto;
+import com.react.backend.domain.board.dto.BoardListResponseDto;
+import com.react.backend.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
