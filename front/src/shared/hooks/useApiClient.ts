@@ -59,7 +59,7 @@ export const useApiClient = <T = any>() => {
             API_CONFIG_KEYS.some((key) => key in param);
     }
 
-    const getApiConfig = (param?: ApiConfig | any): ApiConfig => {
+    const getApiConfig = (param?: ApiConfig): ApiConfig => {
         if (isApiConfig(param)) {
             return param;
         } else {
@@ -67,31 +67,31 @@ export const useApiClient = <T = any>() => {
         }
     }
 
-    const search = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
+    const search = async (param?: ApiConfig): Promise<ApiResponse<T>> => {
         const apiConfig = getApiConfig(param);
         const queryString = toQueryString(apiConfig?.body)
+        const baseUrl = getApiUrl(apiConfig)
 
-        const url = queryString ? `${getApiUrl()}?${queryString}`
-        : getApiUrl()
+        const url = queryString ? `${baseUrl}?${queryString}` : baseUrl
 
         return await apiClient.get(url);
     }
 
-    const save = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
+    const save = async (param?: ApiConfig): Promise<ApiResponse<T>> => {
         return await post(param);
     }
 
-    const post = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
+    const post = async (param?: ApiConfig): Promise<ApiResponse<T>> => {
         const apiConfig = getApiConfig(param);
         return await apiClient.post(getApiUrl(apiConfig), apiConfig?.body);
     }
 
-    const del = async (param?: ApiConfig | any): Promise<ApiResponse<T>> => {
+    const del = async (param?: ApiConfig): Promise<ApiResponse<T>> => {
         const apiConfig = getApiConfig(param);
         return await apiClient.del(getApiUrl(apiConfig));
     }
 
-    const download = async (param?: ApiConfig | any): Promise<AxiosResponse<Blob>> => {
+    const download = async (param?: ApiConfig): Promise<AxiosResponse<Blob>> => {
         const apiConfig = getApiConfig(param);
         return await apiClient.download(getApiUrl(apiConfig), apiConfig?.body);
     }

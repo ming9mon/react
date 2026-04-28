@@ -4,12 +4,14 @@ import { ReactNode } from "react";
 
 interface DataTableLayoutProps {
   title: string;
+  search?: ReactNode;
   buttons?: ReactNode;
   children: ReactNode;
 }
 
 export default function DataTableLayout({
   title,
+  search,
   buttons,
   children,
 }: DataTableLayoutProps) {
@@ -19,6 +21,11 @@ export default function DataTableLayout({
       <div className="flex items-center justify-between border-b border-gray-200 pb-3 shrink-0">
         <h1 className="text-lg font-semibold text-gray-800">{title}</h1>
       </div>
+
+      {/* 검색 영역 */}
+      {search && (
+        <div className="shrink-0">{search}</div>
+      )}
 
       {/* 버튼 영역 */}
       {buttons && (

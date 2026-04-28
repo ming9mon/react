@@ -10,11 +10,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
+interface ServerPagination {
+  totalRows: number;
+  pageIndex: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+}
+
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, any>[];
   data: TData[];
   onRowDoubleClick?: (row: TData) => void;
   pageSize?: number;
+  serverPagination?: ServerPagination;
 }
 
 export default function DataTable<TData>({
@@ -22,19 +31,59 @@ export default function DataTable<TData>({
   data,
   onRowDoubleClick,
   pageSize = 10,
+  serverPagination,
 }: DataTableProps<TData>) {
+  const isServer = !!serverPagination;
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize } },
+    ...(isServer
+      ? {
+          manualPagination: true,
+          pageCount: Math.ceil(serverPagination.totalRows / serverPagination.pageSize),
+          state: {
+            pagination: {
+              pageIndex: serverPagination.pageIndex,
+              pageSize: serverPagination.pageSize,
+            },
+          },
+          onPaginationChange: (updater) => {
+            const prev = { pageIndex: serverPagination.pageIndex, pageSize: serverPagination.pageSize };
+            const next = typeof updater === "function" ? updater(prev) : updater;
+            if (next.pageIndex !== prev.pageIndex) serverPagination.onPageChange(next.pageIndex);
+            if (next.pageSize !== prev.pageSize) serverPagination.onPageSizeChange(next.pageSize);
+          },
+        }
+      : {
+          getPaginationRowModel: getPaginationRowModel(),
+          initialState: { pagination: { pageSize } },
+        }),
   });
 
-  const { pageIndex, pageSize: currentPageSize } = table.getState().pagination;
-  const totalRows = data.length;
-  const from = totalRows === 0 ? 0 : pageIndex * currentPageSize + 1;
-  const to = Math.min((pageIndex + 1) * currentPageSize, totalRows);
+  const pagination = isServer
+    ? { pageIndex: serverPagination.pageIndex, pageSize: serverPagination.pageSize }
+    : table.getState().pagination;
+
+  const totalRows = isServer ? serverPagination.totalRows : data.length;
+  const pageCount = isServer
+    ? Math.ceil(totalRows / pagination.pageSize)
+    : table.getPageCount();
+  const from = totalRows === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1;
+  const to = Math.min((pagination.pageIndex + 1) * pagination.pageSize, totalRows);
+  const canPrev = pagination.pageIndex > 0;
+  const canNext = pagination.pageIndex < pageCount - 1;
+
+  const gotoPage = (page: number) => {
+    if (isServer) serverPagination.onPageChange(page);
+    else table.setPageIndex(page);
+  };
+
+  const changeSize = (size: number) => {
+    if (isServer) serverPagination.onPageSizeChange(size);
+    else table.setPageSize(size);
+  };
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -58,10 +107,7 @@ export default function DataTable<TData>({
           <tbody>
             {table.getRowModel().rows.length === 0 ? (
               <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-4 py-8 text-center text-gray-400"
-                >
+                <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-400">
                   데이터가 없습니다.
                 </td>
               </tr>
@@ -91,53 +137,25 @@ export default function DataTable<TData>({
         </span>
 
         <div className="flex items-center gap-1">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => gotoPage(0)} disabled={!canPrev}>
             <ChevronsLeft className="h-4 w-4" />
           </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => gotoPage(pagination.pageIndex - 1)} disabled={!canPrev}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-
-          <span className="text-sm px-2">
-            {pageIndex + 1} / {table.getPageCount() || 1}
-          </span>
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
+          <span className="text-sm px-2">{pagination.pageIndex + 1} / {pageCount || 1}</span>
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => gotoPage(pagination.pageIndex + 1)} disabled={!canNext}>
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => gotoPage(pageCount - 1)} disabled={!canNext}>
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
 
         <select
           className="text-sm border border-gray-200 rounded px-2 py-1"
-          value={currentPageSize}
-          onChange={(e) => table.setPageSize(Number(e.target.value))}
+          value={pagination.pageSize}
+          onChange={(e) => changeSize(Number(e.target.value))}
         >
           {[10, 20, 50].map((size) => (
             <option key={size} value={size}>{size}건</option>
