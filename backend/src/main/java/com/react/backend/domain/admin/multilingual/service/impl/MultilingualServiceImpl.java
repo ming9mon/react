@@ -23,7 +23,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.util.StringUtils;
+
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -57,38 +60,62 @@ public class MultilingualServiceImpl implements MultilingualService {
     return new SearchMultilingualDetailResponseDto(base, values);
   }
 
-  /** 다국어 등록/수정 (key 존재 시 수정, 없으면 등록) */
+  private static final Map<String, String> TYPE_SEQUENCE_MAP = Map.of(
+      "S", "seq_multilingual_screen",
+      "W", "seq_multilingual_word",
+      "M", "seq_multilingual_message",
+      "E", "seq_multilingual_error"
+  );
+
+  /** 다국어 등록/수정 (key 없으면 시퀀스로 생성 후 등록, key 있으면 수정) */
   @Override
   @Transactional
   public SaveMultilingualResponseDto save(SaveMultilingualRequestDto requestDto) {
     String key = requestDto.getMultilingualKey();
-    boolean isNew = !multilingualBaseRepository.existsById(key);
+    boolean isNew = !StringUtils.hasText(key);
 
-    TMultilingualBase base = isNew ? new TMultilingualBase() : multilingualBaseRepository.findById(key).get();
-    base.setMultilingualKey(key);
+    if (isNew) {
+      String type = requestDto.getMultilingualType();
+      String sequenceName = TYPE_SEQUENCE_MAP.get(type);
+      if (sequenceName == null) {
+        throw new IllegalArgumentException("유효하지 않은 다국어 유형입니다: " + type);
+      }
+      long nextVal = multilingualRepositoryCustom.nextSequenceValue(sequenceName);
+      key = type + String.format("%05d", nextVal);
+    } else if (!multilingualBaseRepository.existsById(key)) {
+      throw new IllegalArgumentException("존재하지 않는 다국어 키입니다: " + key);
+    }
+
+    final String resolvedKey = key;
+
+    TMultilingualBase base = isNew ? new TMultilingualBase()
+        : multilingualBaseRepository.findById(resolvedKey)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 다국어 키입니다: " + resolvedKey));
+
+    base.setMultilingualKey(resolvedKey);
     base.setMultilingualType(requestDto.getMultilingualType());
     base.setUseYn(requestDto.getUseYn());
     base.setMultilingualDesc(requestDto.getMultilingualDesc());
+
     multilingualBaseRepository.save(base);
 
-    multilingualRepositoryCustom.deleteAllByMultilingualKey(key);
     requestDto.getValues().forEach(valueDto -> {
       TLangBase langBase = langBaseRepository.findById(valueDto.getLangCd())
           .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 언어 코드입니다: " + valueDto.getLangCd()));
 
       TMultilingualValueId id = new TMultilingualValueId();
-      id.setMultilingualKey(key);
+      id.setMultilingualKey(resolvedKey);
       id.setLangCd(valueDto.getLangCd());
 
       TMultilingualValue value = new TMultilingualValue();
       value.setId(id);
-      value.setMultilingualKey(multilingualBaseRepository.getReferenceById(key));
+      value.setMultilingualKey(multilingualBaseRepository.getReferenceById(resolvedKey));
       value.setLangCd(langBase);
       value.setMultilingualVal(valueDto.getMultilingualVal());
       multilingualValueRepository.save(value);
     });
 
-    return new SaveMultilingualResponseDto(key, isNew ? "INSERT" : "UPDATE");
+    return new SaveMultilingualResponseDto(resolvedKey, isNew ? "INSERT" : "UPDATE");
   }
 
   /** 다국어 삭제 */

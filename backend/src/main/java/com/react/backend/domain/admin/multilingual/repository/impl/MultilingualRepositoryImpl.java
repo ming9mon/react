@@ -2,6 +2,7 @@ package com.react.backend.domain.admin.multilingual.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import com.react.backend.domain.admin.multilingual.dto.SearchMultilingualListResponseDto;
 import com.react.backend.domain.admin.multilingual.repository.MultilingualRepositoryCustom;
 import com.react.backend.shared.entity.QTLangBase;
@@ -23,6 +24,7 @@ import java.util.Objects;
 public class MultilingualRepositoryImpl implements MultilingualRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final EntityManager entityManager;
 
     @Override
     public Page<SearchMultilingualListResponseDto> searchMultilingualList(
@@ -91,5 +93,12 @@ public class MultilingualRepositoryImpl implements MultilingualRepositoryCustom 
             .delete(qtMultilingualValue)
             .where(qtMultilingualValue.id.multilingualKey.eq(multilingualKey))
             .execute();
+    }
+
+    @Override
+    public long nextSequenceValue(String sequenceName) {
+        return ((Number) entityManager
+            .createNativeQuery("SELECT nextval('" + sequenceName + "')")
+            .getSingleResult()).longValue();
     }
 }

@@ -20,4 +20,6 @@ public interface MultilingualRepositoryCustom {
     List<TMultilingualValue> findAllByMultilingualKey(String multilingualKey);
 
     void deleteAllByMultilingualKey(String multilingualKey);
+
+    long nextSequenceValue(String sequenceName);
 }

@@ -12,8 +12,8 @@ import java.util.List;
 @Getter
 @Setter
 public class SaveMultilingualRequestDto extends BaseDto {
-  @NotBlank @Size(max = 6)
-  private String multilingualKey;  // 다국어 키
+  @Size(max = 6)
+  private String multilingualKey;  // 다국어 키 (등록 시 null → 시퀀스로 자동 생성, 수정 시 필수)
 
   @NotBlank @Size(max = 2)
   private String multilingualType; // 다국어 유형 (S: SCREEN / W: WORD / M: MESSAGE / E: ERROR)
