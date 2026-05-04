@@ -5,4 +5,5 @@ export interface ComboDto {
 
 export interface InitResponse {
   langCdList: ComboDto[];
+  multilingual: Record<string, string>;
 }

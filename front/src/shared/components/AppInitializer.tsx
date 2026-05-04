@@ -7,7 +7,7 @@ import { ApiResponse } from "@/shared/types/api";
 import * as apiClient from "@/shared/api/apiClient";
 
 export default function AppInitializer() {
-  const { langCdList, setLangCdList, setInitialized } = useInitStore();
+  const { langCdList, setLangCdList, setMultilingual, setInitialized } = useInitStore();
 
   useEffect(() => {
     if (langCdList.length > 0) return;
@@ -16,12 +16,13 @@ export default function AppInitializer() {
       const { code, body } = await apiClient.get<ApiResponse<InitResponse>>("/init");
       if (code === "200") {
         setLangCdList(body.langCdList);
+        setMultilingual(body.multilingual);
         setInitialized(true);
       }
     };
 
     fetchInit();
-  }, [langCdList.length, setLangCdList, setInitialized]);
+  }, [langCdList.length, setLangCdList, setMultilingual, setInitialized]);
 
   return null;
 }
