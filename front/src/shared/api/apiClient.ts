@@ -89,7 +89,7 @@ api.interceptors.response.use(
 	},
 	(error) => {
 		useUiStore.getState().stopLoading();
-		return handleError(error)
+		return handleError(error);
 	}
 )
 

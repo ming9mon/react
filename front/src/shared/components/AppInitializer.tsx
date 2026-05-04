@@ -13,11 +13,11 @@ export default function AppInitializer() {
     if (langCdList.length > 0) return;
 
     const fetchInit = async () => {
-      const res = await apiClient.get<ApiResponse<InitResponse>>("/init");
-      if (res?.body?.langCdList?.length) {
-        setLangCdList(res.body.langCdList);
+      const { code, body } = await apiClient.get<ApiResponse<InitResponse>>("/init");
+      if (code === "200") {
+        setLangCdList(body.langCdList);
+        setInitialized(true);
       }
-      setInitialized(true);
     };
 
     fetchInit();

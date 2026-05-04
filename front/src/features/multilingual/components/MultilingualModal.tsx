@@ -28,11 +28,11 @@ export default function MultilingualModal({
   const isEdit = !!detail;
   const langCdList = useInitStore((s) => s.langCdList);
 
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<MultilingualSaveRequest>({
+  const { register, handleSubmit, reset, control } = useForm<MultilingualSaveRequest>({
     defaultValues: { multilingualType: "S", useYn: "Y", values: [] },
   });
 
-  const { fields, replace } = useFieldArray({ control, name: "values" });
+  const { fields } = useFieldArray({ control, name: "values" });
 
   useEffect(() => {
     if (!open) return;
@@ -64,47 +64,55 @@ export default function MultilingualModal({
         <form onSubmit={handleSubmit(onSave)}>
           <div className="flex flex-col gap-4">
 
-            {/* 다국어 코드 */}
+            {/* 다국어 코드 - 수정 시에만 표시 (disabled) */}
+            {isEdit && (
+              <div className="grid gap-2">
+                <CommonLabel htmlFor="multilingualKey">다국어 코드</CommonLabel>
+                <Input
+                  id="multilingualKey"
+                  {...register("multilingualKey")}
+                  disabled
+                  className="bg-gray-50 text-gray-500"
+                />
+              </div>
+            )}
+
+            {/* 타입 */}
             <div className="grid gap-2">
-              <CommonLabel htmlFor="multilingualKey" required>다국어 코드</CommonLabel>
-              <Input
-                id="multilingualKey"
-                {...register("multilingualKey", { required: "다국어 코드를 입력해주세요" })}
-                maxLength={6}
-                disabled={isEdit}
-                className={isEdit ? "bg-gray-50 text-gray-500" : ""}
-                placeholder="최대 6자"
-              />
-              {errors.multilingualKey && <p className="text-sm text-red-500">{errors.multilingualKey.message}</p>}
+              <CommonLabel htmlFor="multilingualType" required>타입</CommonLabel>
+              <select
+                id="multilingualType"
+                {...register("multilingualType", { required: true })}
+                className="w-full h-9 rounded-md border border-input px-3 text-sm"
+              >
+                {MULTILINGUAL_TYPE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
             </div>
 
-            {/* 타입 / 사용여부 */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <CommonLabel htmlFor="multilingualType" required>타입</CommonLabel>
-                <select
-                  id="multilingualType"
-                  {...register("multilingualType", { required: true })}
-                  className="w-full h-9 rounded-md border border-input px-3 text-sm"
-                >
-                  {MULTILINGUAL_TYPE_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
+            {/* 언어 + 값 */}
+            {fields.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex flex-col gap-1">
+                    <CommonLabel htmlFor={`langCd-${index}`} required>언어</CommonLabel>
+                    <select
+                      id={`langCd-${index}`}
+                      {...register(`values.${index}.langCd`)}
+                      className="h-9 rounded-md border border-input px-3 text-sm bg-gray-50 text-gray-500"
+                      disabled
+                    >
+                      {langCdList.map((lang) => (
+                        <option key={lang.code} value={lang.code}>{lang.text}</option>
+                      ))}
+                    </select>
+                    <CommonLabel htmlFor={`multilingualVal-${index}`} required>값</CommonLabel>
+                    <Input id={`multilingualVal-${index}`} {...register(`values.${index}.multilingualVal`)} />
+                  </div>
+                ))}
               </div>
-              <div className="grid gap-2">
-                <CommonLabel htmlFor="useYn" required>사용여부</CommonLabel>
-                <select
-                  id="useYn"
-                  {...register("useYn")}
-                  className="w-full h-9 rounded-md border border-input px-3 text-sm"
-                >
-                  {USE_YN_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            )}
 
             {/* 설명 */}
             <div className="grid gap-2">
@@ -112,26 +120,19 @@ export default function MultilingualModal({
               <Input id="multilingualDesc" {...register("multilingualDesc")} maxLength={500} />
             </div>
 
-            {/* 언어별 번역값 */}
-            {fields.length > 0 && (
-              <div className="grid gap-3">
-                <CommonLabel htmlFor="values">언어별 번역</CommonLabel>
-                <div className="flex flex-col gap-2 rounded border border-gray-100 p-3 bg-gray-50">
-                  {fields.map((field, index) => {
-                    const lang = langCdList.find((l) => l.code === field.langCd);
-                    return (
-                      <div key={field.id} className="grid grid-cols-[80px_1fr] items-center gap-3">
-                        <span className="text-sm text-gray-600">{lang?.text ?? field.langCd}</span>
-                        <Input
-                          {...register(`values.${index}.multilingualVal`)}
-                        />
-                        <input type="hidden" {...register(`values.${index}.langCd`)} />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            {/* 사용여부 */}
+            <div className="grid gap-2">
+              <CommonLabel htmlFor="useYn" required>사용여부</CommonLabel>
+              <select
+                id="useYn"
+                {...register("useYn")}
+                className="w-full h-9 rounded-md border border-input px-3 text-sm"
+              >
+                {USE_YN_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
 
             {/* 버튼 */}
             <div className="flex justify-between pt-2">
